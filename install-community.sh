@@ -6,6 +6,11 @@
 #useradd --system --no-create-home --shell /bin/false fastd
 #useradd --system --no-create-home --shell /bin/false openvpn
 #config-files from folder basic-config
+#systemctl enable named iptables openvpn@tun-01
+#systemctl start named iptables openvpn@tun-01
+#echo 1 > /proc/sys/net/ipv4/ip_forward
+#echo 1 > /proc/sys/net/ipv4/ip_forward_use_pmtu
+
 
 
 function input_str { # $1 is output
