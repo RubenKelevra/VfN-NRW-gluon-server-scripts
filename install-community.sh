@@ -6,6 +6,7 @@
 #useradd --system --no-create-home --shell /bin/false fastd
 #useradd --system --no-create-home --shell /bin/false openvpn
 #create openvpn@tun-01 config 
+#chmod +x /etc/openvpn/tun-01_up.sh
 #config-files from folder basic-config
 #systemctl enable named iptables openvpn@tun-01
 #systemctl start named iptables openvpn@tun-01
