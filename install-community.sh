@@ -5,12 +5,14 @@
 #yaourt -S fastd batctl batman-adv
 #useradd --system --no-create-home --shell /bin/false fastd
 #useradd --system --no-create-home --shell /bin/false openvpn
+#create openvpn@tun-01 config 
 #config-files from folder basic-config
 #systemctl enable named iptables openvpn@tun-01
 #systemctl start named iptables openvpn@tun-01
 #echo 1 > /proc/sys/net/ipv4/ip_forward
 #echo 1 > /proc/sys/net/ipv4/ip_forward_use_pmtu
 #touch /etc/sysctl.d/50-default.conf
+
 
 
 function input_str { # $1 is output
