@@ -1,4 +1,10 @@
 #!/bin/bash 
+
+##preconditions:
+#useradd --system --no-create-home --shell /bin/false fastd
+#useradd --system --no-create-home --shell /bin/false openvpn
+
+
 function input_str { # $1 is output
   ret=""
   while [ -z $ret ]; do
