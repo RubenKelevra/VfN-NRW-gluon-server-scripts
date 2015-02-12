@@ -63,8 +63,6 @@ ipv4_2="$ret"
 
 fastd_port=$(expr $fastd_port + $ret)
 
-echo "Generating fastd-config..."
-
 mkdir -p /etc/fastd/$community/nodes
 
 cd /etc/fastd/$community
@@ -116,6 +114,8 @@ on down \"
 echo "secret \"$privkey\";" > secret.conf
 unset privkey
 
+echo "fastd-config done."
+
 echo "generating netctl-profile for bridge-interface"
 cd /etc/netctl
 
@@ -132,12 +132,18 @@ IP6=static
 Address6=('fda0:747e:ab29:$dialing_code::c$servernumber/64')
 SkipForwardingDelay=yes" >> freifunk-$community_short
 
-echo "starting bridge..."
+echo "netctl-config done."
+
+
 netctl start freifunk-$community_short
 netctl enable freifunk-$community_short
 
+echo "bridge started."
+
 systemctl enable fastd@$community
 systemctl start fastd@$community
+
+echo "fastd started."
 
 #generate blockranges
 blockranges=""
@@ -176,7 +182,11 @@ subnet 10.$ipv4_2.0.0 netmask 255.255.0.0 {\n\
 \n\
 #=+#/" /etc/dhcpd.conf
 
+echo "dhcpd-config done."
+
 systemctl restart dhcpd4
+
+echo "dhcpd restarted."
 
 sed -i -e "s/\/\/#6+#/fda0:747e:ab29:$dialing_code::c$servernumber;\n\
         \/\/#6+#/" /etc/named.conf
@@ -189,7 +199,11 @@ fi
 sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
         \/\/#4+#/" /etc/named.conf
 
+echo "named-config done."
+
 systemctl restart named
+
+echo "named restarted."
 
 if [ $bPublic_ip6 -eq 1 ]; then
   sed -i -e "s/#=+#/\n\
@@ -210,7 +224,13 @@ if [ $bPublic_ip6 -eq 1 ]; then
   };\n\
   #=+#/" /etc/radvd.conf
   
+  echo "radvd-config done."
+  
   systemctl restart radvd
+  
+  echo "radvd restarted."
+else
+  echo "skipping radvd..."
 fi
 
 #configure bird
@@ -221,7 +241,12 @@ sed -i -e "s/#=+1#/\n\
 sed -i -e "s/#=+2#/\n\
   route 10.$ipv4_2.0.0/16 via "freifunk-$community_short";\n\
   #=+2#/" /etc/bird.conf
+
+echo "bird-config done."  
+
 systemctl restart bird
+
+echo "bird restarted."
 
 #configure bird6
 if [ $bPublic_ip6 -eq 1 ]; then
@@ -233,9 +258,16 @@ fi
 sed -i -e "s/#=+2#/\n\
   route fda0:747e:ab29:$dialing_code::/64 via "freifunk-$community_short";\n\
   #=+2#/" /etc/bird6.conf
+  
+echo "bird6-config done."  
+  
 systemctl restart bird6
 
+echo "bird6 restarted."
+
 systemctl restart ntpd
+
+echo "ntpd restarted."
 
 echo "
 
@@ -247,3 +279,7 @@ if [ \"\$OLD_STATE\" != \"\$NEW_STATE\" ]; then
   echo 96MBit/96MBit > /sys/class/net/\$MESH/mesh/gw_bandwidth
 fi
 " >> /usr/local/bin/tun-vpn-01_check.sh
+
+echo "tun-check-script updated... in 60 seconds online at most.
+
+Goodbye!"
