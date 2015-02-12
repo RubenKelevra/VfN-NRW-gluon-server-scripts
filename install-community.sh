@@ -234,13 +234,11 @@ else
 fi
 
 #configure bird
-sed -i -e "s/#=+1#/\n\
-  if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
-  #=+1#/" /etc/bird.conf
+sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
+        #=+1#/" /etc/bird.conf
 
-sed -i -e "s/#=+2#/\n\
-  route 10.$ipv4_2.0.0\/16 via "freifunk-$community_short";\n\
-  #=+2#/" /etc/bird.conf
+sed -i -e "s/#=+2#/route 10.$ipv4_2.0.0\/16 via "freifunk-$community_short";\n\
+        #=+2#/" /etc/bird.conf
 
 echo "bird-config done."  
 
