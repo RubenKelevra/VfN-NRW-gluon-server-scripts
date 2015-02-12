@@ -219,7 +219,7 @@ sed -i -e "s/#=+1#/\n\
   #=+1#/" /etc/bird.conf
 
 sed -i -e "s/#=+2#/\n\
-  route 10.$ipv4_2.0.0/16 via "freifunk-$community_short";
+  route 10.$ipv4_2.0.0/16 via "freifunk-$community_short";\n\
   #=+2#/" /etc/bird.conf
 systemctl restart bird
 
