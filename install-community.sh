@@ -248,14 +248,12 @@ echo "bird restarted."
 
 #configure bird6
 if [ $bPublic_ip6 -eq 1 ]; then
-  sed -i -e "s/#=+1#/\n\
-    route 2001:bf7:100:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
-    #=+1#/" /etc/bird6.conf
+  sed -i -e "s/#=+1#/route 2001:bf7:100:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
+        #=+1#/" /etc/bird6.conf
 fi
 
-sed -i -e "s/#=+2#/\n\
-  route fda0:747e:ab29:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
-  #=+2#/" /etc/bird6.conf
+sed -i -e "s/#=+2#/route fda0:747e:ab29:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
+        #=+2#/" /etc/bird6.conf
   
 echo "bird6-config done."  
   
