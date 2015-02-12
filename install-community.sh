@@ -41,7 +41,7 @@ pubkey=""
 privkey=""
 tmp=""
 
-input_str "Name for the new Community (lowercase):"
+input_str "Name for the new community (lowercase):"
 community="$ret"
 
 echo "please make sure that the community '$community' has been added to mysql-database."
@@ -51,7 +51,7 @@ community_short="$ret"
 
 #FIXME add check
 
-input_str "First 3-4 numbers of the dialing_code of the townhall, without leading zero!:"
+input_str "First 3-4 numbers of the dialing code of the townhall, without leading zero!:"
 dialing_code="$ret"
 
 #FIXME add check
