@@ -75,7 +75,7 @@ unset tmp
 
 echo "key \"$pubkey\"; #public key" > nodes/$servername.server
 [ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port;" >> nodes/$servername.server
-[ ! -z "$server_pubip6" ] && echo "remote $server_pubip6:$fastd_port;" >> nodes/$servername.server
+[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port;" >> nodes/$servername.server
 
 touch fastd.conf
 [ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port;" >> fastd.conf
