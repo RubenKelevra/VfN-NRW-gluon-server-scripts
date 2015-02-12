@@ -29,6 +29,7 @@ servernumber="04" #for ipv6 cXX
 server_pubip4="62.141.34.115"
 server_pubip6=""
 gateway_ip4="1" # 10.xx.n.0 we set n here
+bPublic_ip6=0
 
 community=""
 community_short=""
@@ -178,7 +179,12 @@ systemctl restart dhcpd4
 
 sed -i -e "s/\/\/#6+#/fda0:747e:ab29:$dialing_code::c$servernumber;\n\
         \/\/#6+#/" /etc/named.conf
-        
+
+if [ $bPublic_ip6 -eq 1 ]; then
+  sed -i -e "s/\/\/#6+#/2001:bf7:100:$dialing_code::c$servernumber;\n\
+        \/\/#6+#/" /etc/named.conf
+fi
+
 sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
         \/\/#4+#/" /etc/named.conf
 
