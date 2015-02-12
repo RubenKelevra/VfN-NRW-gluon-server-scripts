@@ -213,7 +213,15 @@ if [ $bPublic_ip6 -eq 1 ]; then
   systemctl restart radvd
 fi
 
-#bird missing
+#configure bird
+sed -i -e "s/#=+1#/\n\
+  if net ~ 10.$ipv4_2.0.0/16 then reject;\n\
+  #=+1#/" /etc/bird.conf
+
+sed -i -e "s/#=+2#/\n\
+  route 10.$ipv4_2.0.0/16 via "freifunk-$community_short";
+  #=+2#/" /etc/bird.conf
+systemctl restart bird
 
 #bird6 missing 
 
