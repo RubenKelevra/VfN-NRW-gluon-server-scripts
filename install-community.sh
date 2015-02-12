@@ -214,7 +214,7 @@ if [ $bPublic_ip6 -eq 1 ]; then
       MaxRtrAdvInterval 200;\n\
       AdvLinkMTU $radvd_AdvLinkMTU;\n\
   \n\
-      prefix 2001:bf7:100:$dialing_code::/64\n\
+      prefix 2001:bf7:100:$dialing_code::\/64\n\
       {\n\
       };\n\
   \n\
@@ -235,11 +235,11 @@ fi
 
 #configure bird
 sed -i -e "s/#=+1#/\n\
-  if net ~ 10.$ipv4_2.0.0/16 then reject;\n\
+  if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
   #=+1#/" /etc/bird.conf
 
 sed -i -e "s/#=+2#/\n\
-  route 10.$ipv4_2.0.0/16 via "freifunk-$community_short";\n\
+  route 10.$ipv4_2.0.0\/16 via "freifunk-$community_short";\n\
   #=+2#/" /etc/bird.conf
 
 echo "bird-config done."  
