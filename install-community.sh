@@ -156,14 +156,14 @@ else
   blockonestart=$(expr $gateway_ip4 - 10)
   blockoneend=$(expr $gateway_ip4 - 1)
   blocktwostart=$(expr $gateway_ip4 + 19)
-  blockranges="    pool {\n\
-        range 10.$ipv4_2.$blockonestart.1 10.$ipv4_2.$blockoneend.255;\n\
-        deny all clients;\n\
-    }\n\
-    pool {\n\
-        range 10.$ipv4_2.$blocktwostart.1 10.$ipv4_2.254.255;\n\
-        deny all clients;\n\
-    }"
+  blockranges="  pool {\n\
+    range 10.$ipv4_2.$blockonestart.1 10.$ipv4_2.$blockoneend.255;\n\
+    deny all clients;\n\
+  }\n\
+  pool {\n\
+    range 10.$ipv4_2.$blocktwostart.1 10.$ipv4_2.254.255;\n\
+    deny all clients;\n\
+  }"
 fi
 
 
