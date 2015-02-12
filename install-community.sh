@@ -30,6 +30,7 @@ server_pubip4="62.141.34.115"
 server_pubip6=""
 gateway_ip4="1" # 10.xx.n.0 we set n here
 bPublic_ip6=0
+radvd_AdvLinkMTU=1448
 
 community=""
 community_short=""
@@ -190,7 +191,27 @@ sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
 
 systemctl restart named
 
-#radvd missing
+if [ $bPublic_ip6 -eq 1 ]; then
+  sed -i -e "s/#=+#/\n\
+  interface freifunk-$community_short #$community\n\
+  {\n\
+      AdvSendAdvert on;\n\
+      IgnoreIfMissing on;\n\
+      MaxRtrAdvInterval 200;\n\
+      AdvLinkMTU $radvd_AdvLinkMTU;\n\
+  \n\
+      prefix 2001:bf7:100:$dialing_code::/64\n\
+      {\n\
+      };\n\
+  \n\
+      RDNSS 2001:bf7:100:$dialing_code::c$servernumber\n\
+      {\n\
+      };\n\
+  };\n\
+  #=+#/" /etc/radvd.conf
+  
+  systemctl restart radvd
+fi
 
 #bird missing
 
