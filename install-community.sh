@@ -11,9 +11,19 @@
 #systemctl enable named iptables openvpn@tun-01
 #systemctl start named iptables openvpn@tun-01
 #echo 1 > /proc/sys/net/ipv4/ip_forward
+#echo 1 > /proc/sys/net/ipv6/conf/all/forwarding
+#echo 1 > /proc/sys/net/ipv6/conf/default/forwarding
 #echo 1 > /proc/sys/net/ipv4/ip_forward_use_pmtu
 #touch /etc/sysctl.d/50-default.conf
 #install a tun-check-script vom server-script repo
+
+#add the following to /etc/sudoers
+ # ### give the user fastd the capability to control batctl
+ # fastd ALL=(ALL)NOPASSWD:/usr/bin/batctl
+ # fastd ALL=(ALL)NOPASSWD:/usr/bin/brctl
+ # fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
+ # fastd ALL=(ALL)NOPASSWD:/usr/bin/ip
+
 
 
 function input_str { # $1 is output
