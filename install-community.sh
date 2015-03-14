@@ -84,10 +84,17 @@ echo "mode tap;
 interface \"ff$community_short-mesh-vpn\";
 log to syslog level error;
 user \"fastd\";
+packet mark 0x42;
+cipher \"salsa2012\"  use \"xmm\";
+cipher \"aes128-ctr\" use \"openssl\";
+mac \"ghash\"         use \"pclmulqdq\";
+method \"aes128-ctr+umac\";
+method \"aes128-gcm\";
+method \"salsa2012+umac\";
 method \"salsa2012+gmac\";
 include \"secret.conf\";
 # public $pubkey
-mtu 1426;
+mtu 1312;
 secure handshakes yes;
 
 include peers from \"nodes\";
