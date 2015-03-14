@@ -109,12 +109,15 @@ on up \"
     batctl -m mesh-$community_short dat 1
     echo '120' > /sys/class/net/mesh-$community_short/mesh/hop_penalty
     ip rule add iif freifunk-$community_short lookup 42
+    ip -6 rule add iif freifunk-wk lookup 42 prio 4200
     brctl addif freifunk-$community_short mesh-$community_short
 \";
 
 on down \"
     sudo /usr/bin/brctl delif freifunk-$community_short mesh-$community_short
     sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
+    sudo ip rule del from all iif freifunk-wk lookup 42 prio 4200
+    sudo ip -6 rule del from all iif freifunk-wk lookup 42 prio 4200
 \";" >> fastd.conf
 
 
