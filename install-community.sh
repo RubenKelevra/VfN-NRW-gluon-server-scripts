@@ -197,6 +197,7 @@ subnet 10.$ipv4_2.0.0 netmask 255.255.0.0 {\n\
   option routers 10.$ipv4_2.$gateway_ip4.0;\n\
   option domain-name-servers 10.$ipv4_2.$gateway_ip4.0;\n\
   option ntp-servers 10.$ipv4_2.$gateway_ip4.0;\n\
+  server-identifier 10.$ipv4_2.$gateway_ip4.0;\n\
   interface freifunk-$community_short;\n\
 }\n\
 \n\
