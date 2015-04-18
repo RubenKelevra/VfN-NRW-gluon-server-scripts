@@ -54,8 +54,9 @@ sudo touch /etc/sysctl.d/50-default.conf
 sudo chmod +x /etc/openvpn/tun-01_up.sh
 
 #enabling services
-sudo systemctl enable named iptables openvpn@tun-01
+sudo systemctl enable bird bird6 radvd named iptables openvpn@tun-01
 
 #starting services
 #FIXME wait for adding openvpn@tun-01 account infos
-sudo systemctl start named iptables openvpn@tun-01
+#FIXME ask for ROUTERID for bird
+sudo systemctl start bird bird6 radvd named iptables openvpn@tun-01
