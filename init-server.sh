@@ -45,6 +45,10 @@ for fn in $fns; do
 			exit 1
 		fi
 	fi
+	if [ ! -f "${install_folder}${fn}" ]; then
+		echo "file $fn which is marked for installation could not be found"
+		exit 1
+	fi
 	cat "${install_folder}${fn}" > sudo tee "${fn}"
 done
 
