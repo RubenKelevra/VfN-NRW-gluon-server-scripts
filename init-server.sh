@@ -48,6 +48,8 @@ for fn in $fns; do
 	cat "${install_folder}${fn}" > sudo tee "${fn}"
 done
 
+unset fn fns
+
 #fixing rp-filter
 sudo touch /etc/sysctl.d/50-default.conf
 
