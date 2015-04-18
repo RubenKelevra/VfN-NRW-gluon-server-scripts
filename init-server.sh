@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+set -e
+
 #Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!
 
 if [ "$(whoami)" == "root" ]; then
@@ -31,8 +33,10 @@ fns+=('/etc/radvd.conf')
 for fn in $fns; do
 	[ "$fn" == "" ] && exit 1
 	if [ ! -f "$fn"]; then
-		sudo touch "$fn" || echo "folder for file $fn does not exist, exiting"
-		exit 1
+		if [ ! `sudo touch "$fn"` ]; then
+			echo "folder for file $fn does not exist, exiting"
+			exit 1
+		fi
 	fi
 	cat "${install_folder}${fn}" > sudo tee "${fn}"
 done
