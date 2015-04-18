@@ -15,6 +15,12 @@ yaourt -S $packagelist --needed --noconfirm
 
 unset packagelist
 
+#prepare system
+sudo useradd --system --no-create-home --shell /bin/false fastd
+sudo useradd --system --no-create-home --shell /bin/false openvpn
+
+#create config-files
+
 install_folder='basic-config'
 
 
@@ -40,3 +46,16 @@ for fn in $fns; do
 	fi
 	cat "${install_folder}${fn}" > sudo tee "${fn}"
 done
+
+#fixing rp-filter
+sudo touch /etc/sysctl.d/50-default.conf
+
+#fixing rights
+sudo chmod +x /etc/openvpn/tun-01_up.sh
+
+#enabling services
+sudo systemctl enable named iptables openvpn@tun-01
+
+#starting services
+#FIXME wait for adding openvpn@tun-01 account infos
+sudo systemctl start named iptables openvpn@tun-01
