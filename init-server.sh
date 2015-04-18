@@ -9,12 +9,12 @@ if [ ! -f '/etc/arch-release' ]; then
 	exit 1
 fi
 
-if [ "$(whoami)" == "root" ]; then
+if [ "$(whoami)" == 'root' ]; then
 	echo "Do not run as root. Use a account with sudo-rights."
 	exit 1
 fi
 
-packagelist="iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv"
+packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv'
 
 yaourt -S $packagelist --needed --noconfirm
 
@@ -29,7 +29,7 @@ sudo useradd --system --no-create-home --shell /bin/false openvpn
 install_folder='basic-config'
 
 
-[ "$install_folder" == "" ] && exit 1
+[ "$install_folder" == '' ] && exit 1
 
 fns=()
 fns+=('/etc/iptables/iptables.rules')
@@ -43,7 +43,7 @@ fns+=('/etc/radvd.conf')
 fns+=('/etc/bird.conf')
 
 for fn in $fns; do
-	[ "$fn" == "" ] && exit 1
+	[ "$fn" == '' ] && exit 1
 	if [ ! -f "$fn"]; then
 		if [ ! `sudo touch "$fn"` ]; then
 			echo "folder for file $fn does not exist, exiting"
