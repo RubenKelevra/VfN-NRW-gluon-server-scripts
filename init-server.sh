@@ -1,9 +1,17 @@
 #!/bin/bash 
 
-if [ "$(whoami)" != "root" ]; then
-	echo "Please run as root"
+#Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!
+
+if [ "$(whoami)" == "root" ]; then
+	echo "Do not run as root. Use a account with sudo-rights."
 	exit 1
 fi
+
+packagelist="iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv"
+
+yaourt -S $packagelist --needed --noconfirm
+
+unset packagelist
 
 install_folder='basic-config'
 
@@ -23,8 +31,8 @@ fns+=('/etc/radvd.conf')
 for fn in $fns; do
 	[ "$fn" == "" ] && exit 1
 	if [ ! -f "$fn"]; then
-		touch "$fn" || echo "folder for file $fn does not exist, exiting"
+		sudo touch "$fn" || echo "folder for file $fn does not exist, exiting"
 		exit 1
 	fi
-	cat "${install_folder}${fn}" > "${fn}"
+	cat "${install_folder}${fn}" > sudo tee "${fn}"
 done
