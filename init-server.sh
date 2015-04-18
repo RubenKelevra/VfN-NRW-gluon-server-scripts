@@ -35,6 +35,7 @@ fns+=('/etc/sysctl.d/99-sysctl.conf')
 fns+=('/etc/dhcpd.conf')
 fns+=('/etc/named.conf')
 fns+=('/etc/radvd.conf')
+fns+=('/etc/bird.conf')
 
 for fn in $fns; do
 	[ "$fn" == "" ] && exit 1
