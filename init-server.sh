@@ -21,8 +21,8 @@ yaourt -S $packagelist --needed --noconfirm
 unset packagelist
 
 #prepare system
-sudo useradd --system --no-create-home --shell /bin/false fastd
-sudo useradd --system --no-create-home --shell /bin/false openvpn
+sudo useradd --system --no-create-home --shell /bin/false fastd || true
+sudo useradd --system --no-create-home --shell /bin/false openvpn || true
 
 #create config-files
 
