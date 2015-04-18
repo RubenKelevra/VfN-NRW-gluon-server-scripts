@@ -286,16 +286,8 @@ systemctl restart ntpd
 
 echo "ntpd restarted."
 
-echo "
-
-MESH=mesh-$community_short
-
-OLD_STATE=\"\$(cat /sys/class/net/\$MESH/mesh/gw_mode)\"
-if [ \"\$OLD_STATE\" != \"\$NEW_STATE\" ]; then
-  echo \$NEW_STATE > /sys/class/net/\$MESH/mesh/gw_mode
-  echo 96MBit/96MBit > /sys/class/net/\$MESH/mesh/gw_bandwidth
-fi
-" >> /usr/local/bin/tun-vpn-01_check.sh
+sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
+#=+#/" /usr/local/bin/tun-01_check.sh
 
 echo "tun-check-script updated... in 60 seconds online at most.
 
