@@ -1,6 +1,9 @@
 #!/bin/bash 
 
 ##preconditions:
+#server init script has been run
+
+#old preconditions
 #pacman -S iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc
 #yaourt -S fastd batctl batman-adv
 #useradd --system --no-create-home --shell /bin/false fastd
