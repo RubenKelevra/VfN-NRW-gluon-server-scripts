@@ -1,0 +1,7 @@
+servername="rig"
+servernumber="04" #for ipv6 cXX
+server_pubip4="62.141.34.115"
+server_pubip6=""
+gateway_ip4="1" # 10.xx.n.0 we set n here
+bPublic_ip6=0
+radvd_AdvLinkMTU=1448
