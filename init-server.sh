@@ -40,6 +40,7 @@ fns+=('/etc/dhcpd.conf')
 fns+=('/etc/named.conf')
 fns+=('/etc/radvd.conf')
 fns+=('/etc/bird.conf')
+fns+=('/usr/local/bin/tun-01_check.sh')
 
 #now copy default content to config files, if they doesn't exit, but the folders
 #touch them before filling them, else exit
