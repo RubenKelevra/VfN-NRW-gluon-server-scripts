@@ -4,6 +4,7 @@ set -e
 
 #Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!
 
+#check enviroment
 if [ ! -f '/etc/arch-release' ]; then
 	echo 'this linux seems not to be an ArchLinux, so we exit now.'
 	exit 1
@@ -14,10 +15,12 @@ if [ "$(whoami)" == 'root' ]; then
 	exit 1
 fi
 
+#settings
+install_folder='basic-config'
 packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv'
 
+#install packages
 yaourt -S $packagelist --needed --noconfirm
-
 unset packagelist
 
 #prepare system
@@ -25,10 +28,6 @@ sudo useradd --system --no-create-home --shell /bin/false fastd || true
 sudo useradd --system --no-create-home --shell /bin/false openvpn || true
 
 #create config-files
-
-install_folder='basic-config'
-
-
 [ "$install_folder" == '' ] && exit 1
 
 fns=()
