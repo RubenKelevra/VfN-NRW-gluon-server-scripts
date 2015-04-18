@@ -5,12 +5,12 @@ set -e
 #Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!
 
 if [ ! -f '/etc/arch-release' ]; then
-	echo "this linux seems not to be an ArchLinux, so we exit now."
+	echo 'this linux seems not to be an ArchLinux, so we exit now.'
 	exit 1
 fi
 
 if [ "$(whoami)" == 'root' ]; then
-	echo "Do not run as root. Use a account with sudo-rights."
+	echo 'Do not run as root. Use a account with sudo-rights.'
 	exit 1
 fi
 
