@@ -1,1 +1,267 @@
+#!/bin/bash 
 
+community=""
+community_short=""
+dialing_code=""
+ipv4_2=""
+fastd_port=15000
+pubkey=""
+privkey=""
+tmp=""
+
+function input_str { # $ret is output
+  ret=""
+  while [ -z $ret ]; do
+    read -p "$1 " ret
+    [ -z $ret ] && echo "enter a value!"
+  done
+}
+
+input_str "Enter the name for the community which should be deleted (lowercase):"
+community="$ret"
+
+echo "please make sure that the community '$community' has been deleted from mysql-database."
+
+###
+
+if [ ! -d "/etc/fastd/$community/fastd.conf" ]; then
+  echo "the fastd-config does not exist, community could not been deleted"
+  exit 1
+fi
+
+community_short=$(cat "/etc/fastd/$community/fastd.conf" | grep "ip link set up dev mesh-" | sed -e "s/ip link set up dev mesh-//" | #FIXME remove white spaces)
+
+
+
+
+input_str "Short-name for the community (max 4 letters!, lowercase):"
+community_short="$ret"
+
+#FIXME add check
+
+input_str "First 3-4 numbers of the dialing code of the townhall, without leading zero!:"
+dialing_code="$ret"
+
+#FIXME add check
+
+input_str "Enter the second group of private IP4 (10.xx.0.0/16):"
+ipv4_2="$ret"
+
+#FIXME add check
+
+fastd_port=$(expr $fastd_port + $ret)
+
+mkdir -p /etc/fastd/$community/nodes
+
+cd /etc/fastd/$community
+
+tmp=$(fastd --generate-key)
+
+pubkey=$(echo $tmp | awk '{print $4}')
+privkey=$(echo $tmp | awk '{print $2}')
+unset tmp
+
+echo "key \"$pubkey\"; #public key" > nodes/$servername.server
+[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port;" >> nodes/$servername.server
+[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port;" >> nodes/$servername.server
+
+touch fastd.conf
+[ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port;" >> fastd.conf
+[ ! -z "$server_pubip6" ] && echo "bind [$server_pubip6]:$fastd_port;" >> fastd.conf
+echo "mode tap;
+interface \"ff$community_short-mesh-vpn\";
+log to syslog level error;
+user \"fastd\";
+packet mark 0x42;
+cipher \"salsa2012\"  use \"xmm\";
+cipher \"aes128-ctr\" use \"openssl\";
+mac \"ghash\"         use \"pclmulqdq\";
+method \"aes128-ctr+umac\";
+method \"aes128-gcm\";
+method \"salsa2012+umac\";
+method \"salsa2012+gmac\";
+include \"secret.conf\";
+# public $pubkey
+mtu 1312;
+secure handshakes yes;
+include peers from \"nodes\";
+on up \"
+    ip link set up dev \$INTERFACE
+    batctl -m mesh-$community_short if add \$INTERFACE
+    ip link set up dev mesh-$community_short
+    batctl -m mesh-$community_short it 5000
+    batctl -m mesh-$community_short nc 0
+    batctl -m mesh-$community_short mm 0
+    batctl -m mesh-$community_short dat 1
+    echo '120' > /sys/class/net/mesh-$community_short/mesh/hop_penalty
+    ip rule add iif freifunk-$community_short lookup 42
+    ip -6 rule add iif freifunk-wk lookup 42 prio 4200
+    brctl addif freifunk-$community_short mesh-$community_short
+\";
+on down \"
+    sudo /usr/bin/brctl delif freifunk-$community_short mesh-$community_short
+    sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
+    sudo ip rule del from all iif freifunk-wk lookup 42 prio 4200
+    sudo ip -6 rule del from all iif freifunk-wk lookup 42 prio 4200
+\";" >> fastd.conf
+
+
+echo "secret \"$privkey\";" > secret.conf
+unset privkey
+
+echo "fastd-config done."
+
+echo "generating netctl-profile for bridge-interface"
+cd /etc/netctl
+
+touch freifunk-$community_short
+echo "Description='Freifunk-Bridge for $community'
+Interface=freifunk-$community_short
+Connection=bridge
+BindsToInterfaces=()
+IP=static
+Address=('10.$ipv4_2.$gateway_ip4.0/16')
+## For IPv6 static address configuration
+IP6=static
+Address6=('fda0:747e:ab29:$dialing_code::c$servernumber/64')
+SkipForwardingDelay=yes" >> freifunk-$community_short
+
+echo "netctl-config done."
+
+
+netctl start freifunk-$community_short
+netctl enable freifunk-$community_short
+
+echo "bridge started."
+
+systemctl enable fastd@$community
+systemctl start fastd@$community
+
+echo "fastd started."
+
+#generate blockranges
+blockranges=""
+if [ $gateway_ip4 -eq 1 ]; then
+  blockranges="  pool {\n\
+    range 10.$ipv4_2.11.1 10.$ipv4_2.254.255;\n\
+    deny all clients;\n\
+  }"
+else
+  blockonestart=$(expr $gateway_ip4 - 10)
+  blockoneend=$(expr $gateway_ip4 - 1)
+  blocktwostart=$(expr $gateway_ip4 + 19)
+  blockranges="  pool {\n\
+    range 10.$ipv4_2.$blockonestart.1 10.$ipv4_2.$blockoneend.255;\n\
+    deny all clients;\n\
+  }\n\
+  pool {\n\
+    range 10.$ipv4_2.$blocktwostart.1 10.$ipv4_2.254.255;\n\
+    deny all clients;\n\
+  }"
+fi
+
+
+sed -i -e "s/#=+#/\n\
+# $community.freifunk.net subnet and dhcp range for server\n\
+\n\
+subnet 10.$ipv4_2.0.0 netmask 255.255.0.0 {\n\
+  range 10.$ipv4_2.$gateway_ip4.1 10.$ipv4_2.$(expr $gateway_ip4 + 9).255; #main\n\
+  $blockranges\n\
+  option broadcast-address 10.$ipv4_2.255.255;\n\
+  option routers 10.$ipv4_2.$gateway_ip4.0;\n\
+  option domain-name-servers 10.$ipv4_2.$gateway_ip4.0;\n\
+  option ntp-servers 10.$ipv4_2.$gateway_ip4.0;\n\
+  server-identifier 10.$ipv4_2.$gateway_ip4.0;\n\
+  interface freifunk-$community_short;\n\
+}\n\
+\n\
+#=+#/" /etc/dhcpd.conf
+
+echo "dhcpd-config done."
+
+systemctl restart dhcpd4
+
+echo "dhcpd restarted."
+
+sed -i -e "s/\/\/#6+#/fda0:747e:ab29:$dialing_code::c$servernumber;\n\
+        \/\/#6+#/" /etc/named.conf
+
+if [ $bPublic_ip6 -eq 1 ]; then
+  sed -i -e "s/\/\/#6+#/2001:bf7:100:$dialing_code::c$servernumber;\n\
+        \/\/#6+#/" /etc/named.conf
+fi
+
+sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
+        \/\/#4+#/" /etc/named.conf
+
+echo "named-config done."
+
+systemctl restart named
+
+echo "named restarted."
+
+if [ $bPublic_ip6 -eq 1 ]; then
+  sed -i -e "s/#=+#/\n\
+  interface freifunk-$community_short #$community\n\
+  {\n\
+      AdvSendAdvert on;\n\
+      IgnoreIfMissing on;\n\
+      MaxRtrAdvInterval 200;\n\
+      AdvLinkMTU $radvd_AdvLinkMTU;\n\
+  \n\
+      prefix 2001:bf7:100:$dialing_code::\/64\n\
+      {\n\
+      };\n\
+  \n\
+      RDNSS 2001:bf7:100:$dialing_code::c$servernumber\n\
+      {\n\
+      };\n\
+  };\n\
+  #=+#/" /etc/radvd.conf
+  
+  echo "radvd-config done."
+  
+  systemctl restart radvd
+  
+  echo "radvd restarted."
+else
+  echo "skipping radvd..."
+fi
+
+#configure bird
+sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
+        #=+1#/" /etc/bird.conf
+
+sed -i -e "s/#=+2#/route 10.$ipv4_2.0.0\/16 via \"freifunk-$community_short\";\n\
+        #=+2#/" /etc/bird.conf
+
+echo "bird-config done."  
+
+systemctl restart bird
+
+echo "bird restarted."
+
+#configure bird6
+if [ $bPublic_ip6 -eq 1 ]; then
+  sed -i -e "s/#=+1#/route 2001:bf7:100:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
+        #=+1#/" /etc/bird6.conf
+fi
+
+sed -i -e "s/#=+2#/route fda0:747e:ab29:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
+        #=+2#/" /etc/bird6.conf
+  
+echo "bird6-config done."  
+  
+systemctl restart bird6
+
+echo "bird6 restarted."
+
+systemctl restart ntpd
+
+echo "ntpd restarted."
+
+sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
+#=+#/" /usr/local/bin/tun-01_check.sh
+
+echo "tun-check-script updated... in 60 seconds online at most.
+Goodbye!"
