@@ -308,7 +308,7 @@ if [ $bPublic_ip6 -eq 1 ]; then
         #=+1#/" /etc/bird6.conf
 fi
 
-sed -i -e "s/#=+2#/route fda0:747e:ab29:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
+sed -i -e "s/#=+2#/route fddf:ebfd:a801:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
         #=+2#/" /etc/bird6.conf
   
 echo "bird6-config done."  
