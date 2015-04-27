@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+set -e
+
 ##preconditions:
 #server init script has been run
 
