@@ -258,12 +258,6 @@ if [ $bPublic_ip6 -eq 1 ]; then
       };\n\
   };\n\
   #=+#/" /etc/radvd.conf
-  
-  echo "radvd-config done."
-  
-  systemctl restart radvd
-  
-  echo "radvd restarted."
 else
   sed -i -e "s/#=+#/\n\
   interface freifunk-$community_short #$community\n\
@@ -282,13 +276,11 @@ else
       };\n\
   };\n\
   #=+#/" /etc/radvd.conf
-  
-  echo "radvd-config done."
-  
-  systemctl restart radvd
-  
-  echo "radvd restarted."
 fi
+
+echo "radvd-config done."
+systemctl restart radvd
+echo "radvd restarted."
 
 #configure bird
 sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
