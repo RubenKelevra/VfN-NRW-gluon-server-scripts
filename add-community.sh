@@ -214,7 +214,8 @@ systemctl restart dhcpd4
 
 echo "dhcpd restarted."
 
-sed -i -e "s/\/\/#6+#/fda0:747e:ab29:$dialing_code::c$servernumber;\n\
+sed -i -e "s/\/\/#6+#/fddf:ebfd:a801:$dialing_code::c$servernumber;\n\
+        fddf:ebfd:a801:$dialing_code::ac1;\n\
         \/\/#6+#/" /etc/named.conf
 
 if [ $bPublic_ip6 -eq 1 ]; then
