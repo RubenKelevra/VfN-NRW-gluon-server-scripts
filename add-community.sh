@@ -154,7 +154,7 @@ Address=('10.$ipv4_2.$gateway_ip4.0/16')
 
 ## For IPv6 static address configuration
 IP6=static
-Address6=('fda0:747e:ab29:$dialing_code::c$servernumber/64')
+Address6=('2001:bf7:100:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$dialing_code::ac1/64 preferred 0')
 SkipForwardingDelay=yes" >> freifunk-$community_short
 
 echo "netctl-config done."
