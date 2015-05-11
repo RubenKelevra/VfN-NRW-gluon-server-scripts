@@ -1,4 +1,10 @@
-community="wermelskirchen"
+#Name for the new community (lowercase) as filename
+
+#Short-name for the new community (max 4 letters!, lowercase)
 community_short="wk"
+
+#First 3-4 numbers of the dialing code of the townhall, without leading zero!
 dialing_code="2196"
+
+#The second group of private IP4 (10.xx.0.0/16)
 ipv4_2="52"
