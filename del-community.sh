@@ -1,5 +1,8 @@
 #!/bin/bash 
 
+echo "DO NOT RUN THIS FILE!"
+exit 1
+
 community=""
 community_short=""
 dialing_code=""
