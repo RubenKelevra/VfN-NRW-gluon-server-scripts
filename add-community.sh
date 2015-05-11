@@ -29,15 +29,20 @@ set -e
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ip
 
+if [ -z "$1" ]; then
+  echo "community has not been selected, enter it as first parameter"
+  exit 1
+fi
+community="$1"
 
+fn="serverprofiles/$community"
 
-function input_str { # $1 is output
-  ret=""
-  while [ -z $ret ]; do
-    read -p "$1 " ret
-    [ -z $ret ] && echo "enter a value!"
-  done
-}
+if [ ! -f "$fn" ]; then
+  echo "community profile could not be found."
+  exit 1
+fi
+source "$fn"
+unset fn
 
 HOSTNAME="$(hostname --short)"
 
@@ -46,38 +51,18 @@ fn="serverprofiles/$HOSTNAME"
 if [ ! -f "$fn" ]; then
   echo "server profile could not be found."
   exit 1
-else
-  source "$fn"
 fi
+source "$fn"
 
-community=""
-community_short=""
-dialing_code=""
-ipv4_2=""
+
 fastd_port=15000
 pubkey=""
 privkey=""
 tmp=""
 
-input_str "Name for the new community (lowercase):"
-community="$ret"
+echo "setting up '$community' ..."
 
-echo "please make sure that the community '$community' has been added to mysql-database."
-
-input_str "Short-name for the new Community (max 4 letters!, lowercase):"
-community_short="$ret"
-
-#FIXME add check
-
-input_str "First 3-4 numbers of the dialing code of the townhall, without leading zero!:"
-dialing_code="$ret"
-
-#FIXME add check
-
-input_str "Enter the second group of private IP4 (10.xx.0.0/16):"
-ipv4_2="$ret"
-
-#FIXME add check
+echo "please make sure that the community '$community' has been added to mysql-database!"
 
 fastd_port=$(expr $fastd_port + $ret)
 
