@@ -39,13 +39,16 @@ function input_str { # $1 is output
   done
 }
 
-servername="rig"
-servernumber="04" #for ipv6 cXX
-server_pubip4="62.141.34.115"
-server_pubip6=""
-gateway_ip4="1" # 10.xx.n.0 we set n here
-bPublic_ip6=0
-radvd_AdvLinkMTU=1448
+HOSTNAME="$(hostname --short)"
+
+fn="serverprofiles/$HOSTNAME"
+
+if [ ! -f "$fn" ]; then
+  echo "server profile could not be found."
+  exit 1
+else
+  source "$fn"
+fi
 
 community=""
 community_short=""
