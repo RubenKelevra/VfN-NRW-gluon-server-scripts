@@ -320,6 +320,27 @@ echo "ntpd restarted."
 sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
 #=+#/" /usr/local/bin/tun-01_check.sh
 
-echo "tun-check-script updated... in 60 seconds online at most.
+echo "tun-check-script updated... in 60 seconds online at most."
+
+echo ""
+echo ""
+
+echo "site.conf sample code for this peer:"
+echo ""
+echo "
+$servername = {
+  key = '$pubkey',"
+if [ ! -z "$server_pubip4" && ! -z "$server_pubip6" ]; then
+  echo "  remotes = {'[$server_pubip6] port $fastd_port', '$server_pubip4 port $fastd_port'},"
+elif [ ! -z "$server_pubip4" && -z "$server_pubip6" ]; then
+  echo "  remotes = {'$server_pubip4 port $fastd_port'},"
+elif [ -z "$server_pubip4" && ! -z "$server_pubip6" ]; then
+  echo "  remotes = {'[$server_pubip6] port $fastd_port'},"
+elif [ -z "$server_pubip4" && -z "$server_pubip6" ]; then
+  echo "  remotes = {},"
+echo "},"
+
+echo "
 
 Goodbye!"
+
