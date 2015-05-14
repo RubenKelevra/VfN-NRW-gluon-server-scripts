@@ -106,7 +106,7 @@ on up \"
     ip link set up dev mesh-$community_short
     batctl -m mesh-$community_short it 5000
     batctl -m mesh-$community_short nc 0
-    batctl -m mesh-$community_short mm 0
+    batctl -m mesh-$community_short mm 1
     batctl -m mesh-$community_short dat 1
     echo '120' > /sys/class/net/mesh-$community_short/mesh/hop_penalty
     ip rule add iif freifunk-$community_short lookup 42
