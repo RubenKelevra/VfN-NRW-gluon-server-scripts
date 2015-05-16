@@ -141,7 +141,10 @@ Address=('10.$ipv4_2.$gateway_ip4.0/16')
 ## For IPv6 static address configuration
 IP6=static
 Address6=('2001:bf7:100:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$dialing_code::ac1/64 preferred 0')
-SkipForwardingDelay=yes" >> freifunk-$community_short
+SkipForwardingDelay=yes
+
+ExecUpPost=\"ip link set freifunk-$community_short txqueuelen 1000 && tc qdisc replace dev freifunk-$community_short root fq limit 1000 flow_limit 25 buckets 256 quantum 394 initial_quantum 15140 ; echo 0 > /proc/sys/net/ipv6/conf/freifunk-$community_short/accept_dad\"
+" >> freifunk-$community_short
 
 echo "netctl-config done."
 
