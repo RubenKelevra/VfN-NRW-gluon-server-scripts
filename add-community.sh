@@ -109,7 +109,7 @@ on up \"
     batctl -m mesh-$community_short mm 1
     batctl -m mesh-$community_short dat 1
     echo '120' > /sys/class/net/mesh-$community_short/mesh/hop_penalty
-    ip rule add iif freifunk-$community_short lookup 42
+    ip rule add iif freifunk-$community_short lookup 42 prio 4200
     ip -6 rule add iif freifunk-$community_short lookup 42 prio 4200
     brctl addif freifunk-$community_short mesh-$community_short
 \";
