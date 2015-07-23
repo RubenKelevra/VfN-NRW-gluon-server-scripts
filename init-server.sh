@@ -56,7 +56,7 @@ for fn in $fns; do
 		echo "file $fn which is marked for installation could not be found"
 		exit 1
 	fi
-	cat "${install_folder}${fn}" > sudo tee "${fn}"
+	cat "${install_folder}${fn}" | sudo tee "${fn}"
 done
 
 unset fn fns
