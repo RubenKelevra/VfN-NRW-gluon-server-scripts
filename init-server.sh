@@ -52,7 +52,7 @@ for fn in "${fns[@]}"; do
 	fi
 	if [ ! -f "$fn" ]; then
 		sudo cp "${install_folder}${fn}" "${fn}"
-		if [ "$? -ne "0" ]; then
+		if [ "$?" -ne "0" ]; then
 			echo "file $fn could not be copied"
 			exit 1
 		fi
