@@ -46,17 +46,16 @@ fns+=('/usr/local/bin/tun-01_check.sh')
 #touch them before filling them, else exit
 for fn in "${fns[@]}"; do
 	[ "$fn" == '' ] && exit 1
-	if [ ! -f "$fn" ]; then
-		if [ ! `sudo touch "$fn"` ]; then
-			echo "folder for file $fn does not exist, exiting"
-			exit 1
-		fi
-	fi
 	if [ ! -f "${install_folder}${fn}" ]; then
 		echo "file $fn which is marked for installation could not be found"
 		exit 1
 	fi
-	sudo cp  "${install_folder}${fn}" "${fn}"
+	if [ ! -f "$fn" ]; then
+		if [ ! `sudo cp "${install_folder}${fn}" "${fn}"` ]; then
+			echo "file $fn could not be copied"
+			exit 1
+		fi
+	fi
 done
 
 unset fn fns
