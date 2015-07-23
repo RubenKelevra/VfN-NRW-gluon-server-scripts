@@ -66,6 +66,7 @@ sudo touch /etc/sysctl.d/50-default.conf
 
 #fixing rights
 sudo chmod +x /etc/openvpn/tun-01_up.sh
+sudo chmod +x /usr/local/bin/tun-01_check.sh
 
 #enabling services
 sudo systemctl enable bird bird6 radvd named iptables openvpn@tun-01
