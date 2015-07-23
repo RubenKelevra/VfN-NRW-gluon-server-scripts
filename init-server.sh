@@ -11,7 +11,7 @@ if [ ! -f '/etc/arch-release' ]; then
 fi
 
 if [ "$(whoami)" == 'root' ]; then
-	echo 'Do not run as root. Use a account with sudo-rights.'
+	echo 'Do not run as root. Use an account with sudo-rights.'
 	exit 1
 fi
 
