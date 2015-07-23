@@ -71,7 +71,7 @@ sudo chmod +x /etc/openvpn/tun-01_up.sh
 sudo chmod +x /usr/local/bin/tun-01_check.sh
 
 #enabling services
-sudo systemctl enable bird bird6 radvd named iptables openvpn@tun-01
+sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 
 #starting services
 #FIXME wait for adding openvpn@tun-01 account infos
