@@ -77,3 +77,10 @@ sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 #FIXME wait for adding openvpn@tun-01 account infos
 #FIXME ask for ROUTERID for bird
 sudo systemctl start bird radvd named iptables openvpn@tun-01 # bird6
+
+echo "installing fastd-sudo rights..."
+echo "
+fastd ALL=(ALL)NOPASSWD:/usr/bin/batctl
+fastd ALL=(ALL)NOPASSWD:/usr/bin/brctl
+fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
+fastd ALL=(ALL)NOPASSWD:/usr/bin/ip" | sudo tee -a /etc/sudoers
