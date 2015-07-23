@@ -44,7 +44,7 @@ fns+=('/usr/local/bin/tun-01_check.sh')
 
 #now copy default content to config files, if they doesn't exit, but the folders
 #touch them before filling them, else exit
-for fn in $fns; do
+for fn in ${ARRAY[*]}; do
 	[ "$fn" == '' ] && exit 1
 	if [ ! -f "$fn" ]; then
 		if [ ! `sudo touch "$fn"` ]; then
