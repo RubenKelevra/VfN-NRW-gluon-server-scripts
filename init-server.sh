@@ -30,7 +30,7 @@ sudo useradd --system --no-create-home --shell /bin/false openvpn || true
 #create config-files
 [ "$install_folder" == '' ] && exit 1
 
-fns=()
+declare -a fns
 fns+=('/etc/iptables/iptables.rules')
 fns+=('/etc/openvpn/tun-01.conf')
 fns+=('/etc/openvpn/tun-01_pass.txt')
