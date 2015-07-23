@@ -56,6 +56,8 @@ for fn in "${fns[@]}"; do
 			echo "file $fn could not be copied"
 			exit 1
 		fi
+	else
+		echo "file $fn does exist, we do NOT overwrite, skipping file!"
 	fi
 done
 
