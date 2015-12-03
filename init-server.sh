@@ -80,9 +80,13 @@ sudo systemctl start bird radvd named iptables #bird6
 
 echo "please start openvpn@tun-01 when config is completed."
 
-echo "installing fastd-sudo rights..."
-echo "
-fastd ALL=(ALL)NOPASSWD:/usr/bin/batctl
-fastd ALL=(ALL)NOPASSWD:/usr/bin/brctl
-fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
-fastd ALL=(ALL)NOPASSWD:/usr/bin/ip" | sudo tee -a /etc/sudoers
+if [ ! -f '/etc/sudoers.installed_by_gluon-server-scripts' ]; then
+	echo "installing fastd-sudo rights..."
+	echo "
+	fastd ALL=(ALL)NOPASSWD:/usr/bin/batctl
+	fastd ALL=(ALL)NOPASSWD:/usr/bin/brctl
+	fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
+	fastd ALL=(ALL)NOPASSWD:/usr/bin/ip" | sudo tee -a /etc/sudoers
+
+	touch /etc/sudoers.installed_by_gluon-server-scripts
+fi
