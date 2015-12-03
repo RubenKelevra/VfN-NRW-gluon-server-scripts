@@ -28,7 +28,9 @@ sudo useradd --system --no-create-home --shell /bin/false fastd || true
 sudo useradd --system --no-create-home --shell /bin/false openvpn || true
 
 #create config-files
-[ "$install_folder" == '' ] && exit 1
+[ -z "$install_folder" ] && exit 1
+
+mkdir -p /etc/dhcp.d-freifunk/
 
 declare -a fns
 fns+=('/etc/iptables/iptables.rules')
