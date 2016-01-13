@@ -1,0 +1,14 @@
+#Name for the new community (lowercase) as filename
+
+#Short-name for the new community (max 4 letters!, lowercase)
+community_short='lind'
+
+#First 3-4 numbers of the dialing code of the townhall, without leading zero!
+dialing_code='2266'
+
+#The second group of private IP4 (10.xx.yy.0/1x)
+ipv4_23='141.0'
+
+subnetmask='17'
+
+fastd_port='141'
