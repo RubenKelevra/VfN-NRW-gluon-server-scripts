@@ -1,0 +1,7 @@
+servername="frigg"
+servernumber="06" #for ipv6 cXX
+server_pubip4="178.32.13.122"
+server_pubip6="2001:41d0:2:b5ce:ff::1"
+gateway_ip4="41" # 10.xx.n.0 we set n here
+bPublic_ip6=0
+radvd_AdvLinkMTU=1448
