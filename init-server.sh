@@ -2,7 +2,9 @@
 
 set -e
 
-#Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!
+echo "Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!"
+
+sleep 5
 
 #check enviroment
 if [ ! -f '/etc/arch-release' ]; then
@@ -19,15 +21,20 @@ fi
 install_folder='basic-config'
 packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv'
 
-#install packages
-yaourt -S $packagelist --needed --noconfirm
+echo "updating system..."
+
+( yaourt -Syu --noconfirm ; exit $? ) 2>&1 > /dev/null
+( yaourt -Syua --noconfirm ; exit $? ) 2>&1 > /dev/null
+
+echo "install packages..."
+( yaourt -S $packagelist --needed --noconfirm ; exit $? ) 2>&1 > /dev/null
 unset packagelist
 
-#prepare system
-sudo useradd --system --no-create-home --shell /bin/false fastd || true
-sudo useradd --system --no-create-home --shell /bin/false openvpn || true
+echo "preparing system..."
+( sudo useradd --system --no-create-home --shell /bin/false fastd ) 2>&1 > /dev/null
+( sudo useradd --system --no-create-home --shell /bin/false openvpn ) 2>&1 > /dev/null
 
-#create config-files
+echo "generating config-files..."
 [ -z "$install_folder" ] && exit 1
 
 mkdir -p /etc/dhcp.d-freifunk/
