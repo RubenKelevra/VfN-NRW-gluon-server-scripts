@@ -2,8 +2,16 @@
 
 set -e
 
-echo "Warning: This script is for Arch-Linux only, use carefully, it overwrites several config-files without any queries!"
-
+echo "
+################################################################################
+#                                                                              #
+# Warning: This script is for Arch-Linux only, use carefully, it overwrites    #
+# several config-files without any queries!                                    #
+#                                                                              #
+# If you're unsure what you're doing exit now by pressing ctrl+c!              #
+#                                                                              #
+################################################################################
+"
 sleep 5
 
 #check enviroment
@@ -23,16 +31,16 @@ packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn ha
 
 echo "updating system..."
 
-yaourt -Syu --noconfirm 2>&1 > /dev/null
-yaourt -Syua --noconfirm 2>&1 > /dev/null
+yaourt -Syu --noconfirm >/dev/null 2>&1
+yaourt -Syua --noconfirm >/dev/null 2>&1
 
 echo "install packages..."
-( yaourt -S $packagelist --needed --noconfirm ; exit $? ) 2>&1 > /dev/null
+yaourt -S $packagelist --needed --noconfirm >/dev/null 2>&1
 unset packagelist
 
 echo "preparing system..."
-( sudo useradd --system --no-create-home --shell /bin/false fastd ) 2>&1 > /dev/null
-( sudo useradd --system --no-create-home --shell /bin/false openvpn ) 2>&1 > /dev/null
+sudo useradd --system --no-create-home --shell /bin/false fastd >/dev/null 2>&1 | true
+sudo useradd --system --no-create-home --shell /bin/false openvpn >/dev/null 2>&1 | true
 
 echo "generating config-files..."
 [ -z "$install_folder" ] && exit 1
