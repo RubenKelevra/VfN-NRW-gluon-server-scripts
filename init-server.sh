@@ -23,8 +23,8 @@ packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn ha
 
 echo "updating system..."
 
-( yaourt -Syu --noconfirm ; exit $? ) 2>&1 > /dev/null
-( yaourt -Syua --noconfirm ; exit $? ) 2>&1 > /dev/null
+yaourt -Syu --noconfirm 2>&1 > /dev/null
+yaourt -Syua --noconfirm 2>&1 > /dev/null
 
 echo "install packages..."
 ( yaourt -S $packagelist --needed --noconfirm ; exit $? ) 2>&1 > /dev/null
