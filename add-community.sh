@@ -141,10 +141,10 @@ on down \"
     sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
     sudo /usr/bin/ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
     sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
-\";" >> fastd.conf
+\";" | sudo tee fastd.conf
 
 
-echo "secret \"$privkey\";" > secret.conf
+echo "secret \"$privkey\";" | sudo tee secret.conf
 unset privkey
 
 sudo chmod go-rwx /etc/fastd/$community/secret.conf
