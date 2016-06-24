@@ -27,6 +27,11 @@
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ip
 
+if [ ! -f '/etc/sudoers.installed_by_gluon-server-scripts' ]; then
+  echo "init-server script seems to have never been run here..."
+  exit 1
+fi
+
 if [ -z "$1" ]; then
   echo "community has not been selected, enter it as first parameter"
   exit 1
