@@ -1,0 +1,7 @@
+servername="zoidberg"
+servernumber="08" #for ipv6 cXX
+server_pubip4="185.118.196.50"
+server_pubip6="2a06:9500:7:11:f816:3eff:fe17:1ba8"
+gateway_ip4="51" # 10.xx.n.0 we set n here
+bPublic_ip6=0
+radvd_AdvLinkMTU=1448
