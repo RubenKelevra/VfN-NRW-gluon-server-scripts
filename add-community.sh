@@ -142,8 +142,8 @@ on up \"
 on down \"
     sudo /usr/bin/brctl delif freifunk-$community_short mesh-$community_short
     sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
-    sudo ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
-    sudo ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
+    sudo /usr/bin/ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
+    sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
 \";" >> fastd.conf
 
 
