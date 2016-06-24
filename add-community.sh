@@ -290,7 +290,7 @@ Interface=freifunk-$community_short
 Connection=bridge
 BindsToInterfaces=()
 IP=static
-Address=('10.$ipv4_1.$ipv4_2.0/$')
+Address=('10.$ipv4_1.$ipv4_2.0/$subnetmask')
 
 ## For IPv6 static address configuration
 IP6=static
