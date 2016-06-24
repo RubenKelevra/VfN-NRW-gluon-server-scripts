@@ -131,6 +131,10 @@ on down \"
 echo "secret \"$privkey\";" > secret.conf
 unset privkey
 
+sudo chmod go-rwx /etc/fastd/$community/secret.conf
+
+sudo chown fastd: -R /etc/fastd/$community
+
 echo "fastd-config done."
 
 echo "generating netctl-profile for bridge-interface"
