@@ -59,13 +59,18 @@ pubkey=""
 privkey=""
 tmp=""
 
+if [ -z "$fastd_port" ]; then
+  echo "community-profile is missing a fastd-port definition"
+  exit 1
+fi
+
 echo "setting up '$community' ..."
 
 echo "please make sure that the community '$community' has been added to mysql-database!"
 
 fastd_port=$(($basic_fastd_port+$fastd_port))
 
-mkdir -p /etc/fastd/$community/nodes
+sudo mkdir -p /etc/fastd/$community/nodes
 
 cd /etc/fastd/$community
 
