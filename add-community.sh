@@ -69,6 +69,20 @@ pubkey=""
 privkey=""
 tmp=""
 
+ipv4_2=$(echo $ipv4_23 | cut -d '.' -f 1)
+ipv4_3_netmask=$(echo $ipv4_23 | cut -d '.' -f 2)
+ipv4_3=$(($ipv4_3_netmask+$gateway_ip4))
+
+if [ -z "$ipv4_3_netmask" ]; then
+  echo "community-profile has a bad net-ip definition"
+  exit 1
+fi
+
+if [ -z "$ipv4_3_netmask" ]; then
+  echo "community-profile has a bad net-ip definition only /17 and /16 is supported"
+  exit 1
+fi
+
 if [ -z "$fastd_port" ]; then
   echo "community-profile is missing a fastd-port definition"
   exit 1
@@ -280,17 +294,13 @@ echo "generating netctl-profile for bridge-interface"
 old_dir="$(pwd)"
 cd /etc/netctl
 
-ipv4_1=$(echo $ipv4_23 | cut -d '.' -f 1)
-ipv4_2=$(echo $ipv4_23 | cut -d '.' -f 2)
-ipv4_2=$(($ipv4_2+$gateway_ip4))
-
 sudo touch freifunk-$community_short
 echo "Description='Freifunk-Bridge for $community'
 Interface=freifunk-$community_short
 Connection=bridge
 BindsToInterfaces=()
 IP=static
-Address=('10.$ipv4_1.$ipv4_2.0/$subnetmask')
+Address=('10.$ipv4_2.$ipv4_3.0/$subnetmask')
 
 ## For IPv6 static address configuration
 IP6=static
@@ -318,17 +328,27 @@ sudo systemctl start fastd@${community}HMTU
 
 echo "fastd started."
 
+if [ $subnetmask -eq 16 ]; then
+  subnetmask_binary="255.255.0.0"
+  broadcast_addr="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 255).255)"
+elif [ $subnetmask -eq 17 ]; then
+  subnetmask_binary="255.255.128.0"
+  broadcast_addr="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 127).255)"
+else
+  echo "unexpected error 1831"
+  exit 1
+fi
 
 sed -i -e "s/#=+#/\n\
 # $community.freifunk.net subnet and dhcp range for server\n\
 \n\
-subnet 10.$ipv4_2.0.0 netmask 255.255.0.0 {\n\
-  range 10.$ipv4_2.$gateway_ip4.1 10.$ipv4_2.$(expr $gateway_ip4 + 9).255; #main\n\
-  option broadcast-address 10.$ipv4_2.255.255;\n\
-  option routers 10.$ipv4_2.$gateway_ip4.0;\n\
-  option domain-name-servers 10.$ipv4_2.$gateway_ip4.0;\n\
-  option ntp-servers 10.$ipv4_2.$gateway_ip4.0;\n\
-  server-identifier 10.$ipv4_2.$gateway_ip4.0;\n\
+subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
+  range 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).1 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4 + 9).255; #main\n\
+  option broadcast-address $broadcast_addr;\n\
+  option routers 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
+  option domain-name-servers 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
+  option ntp-servers 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
+  server-identifier 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
   interface freifunk-$community_short;\n\
 }\n\
 \n\
