@@ -313,6 +313,9 @@ echo "bridge started."
 sudo systemctl enable fastd@$community
 sudo systemctl start fastd@$community
 
+sudo systemctl enable fastd@${community}HMTU
+sudo systemctl start fastd@${community}HMTU
+
 echo "fastd started."
 
 #generate blockranges
