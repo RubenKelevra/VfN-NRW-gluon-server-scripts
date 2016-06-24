@@ -339,6 +339,10 @@ else
   exit 1
 fi
 
+sudo mkdir -p /etc/dhcp.d-freifunk/
+
+dhcpd_config="/etc/dhcp.d-freifunk/$community.conf"
+
 sed -i -e "s/#=+#/\n\
 # $community.freifunk.net subnet and dhcp range for server\n\
 \n\
@@ -352,34 +356,36 @@ subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
   interface freifunk-$community_short;\n\
 }\n\
 \n\
-#=+#/" /etc/dhcpd.conf
+#=+#/" | sudo tee "$dhcpd_config"
+
+sudo chmod 644 "$dhcpd_config"
+
+unset dhcpd_config
 
 echo "dhcpd-config done."
 
-systemctl restart dhcpd4
+sudo systemctl restart dhcpd4
 
 echo "dhcpd restarted."
 
-sed -i -e "s/\/\/#6+#/fddf:ebfd:a801:$dialing_code::c$servernumber;\n\
+sudo sed -i -e "s/\/\/#6+#/fddf:ebfd:a801:$dialing_code::c$servernumber;\n\
                 fddf:ebfd:a801:$dialing_code::ac1;\n\
                 \/\/#6+#/" /etc/named.conf
 
-if [ $bPublic_ip6 -eq 1 ]; then
-  sed -i -e "s/\/\/#6+#/2001:bf7:100:$dialing_code::c$servernumber;\n\
+sudo sed -i -e "s/\/\/#6+#/2001:bf7:100:$dialing_code::c$servernumber;\n\
                 \/\/#6+#/" /etc/named.conf
 fi
 
-sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
+sudo sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
                         \/\/#4+#/" /etc/named.conf
 
 echo "named-config done."
 
-systemctl restart named
+sudo systemctl restart named
 
 echo "named restarted."
 
-if [ $bPublic_ip6 -eq 1 ]; then
-  sed -i -e "s/#=+#/\n\
+sudo sed -i -e "s/#=+#/\n\
   interface freifunk-$community_short #$community\n\
   {\n\
       AdvSendAdvert on;\n\
@@ -404,40 +410,21 @@ if [ $bPublic_ip6 -eq 1 ]; then
       };\n\
   };\n\
   #=+#/" /etc/radvd.conf
-else
-  sed -i -e "s/#=+#/\n\
-  interface freifunk-$community_short #$community\n\
-  {\n\
-      AdvSendAdvert on;\n\
-      IgnoreIfMissing on;\n\
-      MaxRtrAdvInterval 200;\n\
-      AdvLinkMTU $radvd_AdvLinkMTU;\n\
-  \n\
-      prefix fddf:ebfd:a801:$dialing_code::\/64\n\
-      {\n\
-      };\n\
-  \n\
-      RDNSS fddf:ebfd:a801:$dialing_code::ac1\n\
-      {\n\
-      };\n\
-  };\n\
-  #=+#/" /etc/radvd.conf
-fi
 
 echo "radvd-config done."
-systemctl restart radvd
+sudo systemctl restart radvd
 echo "radvd restarted."
 
 #configure bird
-sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
+sudo sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
         #=+1#/" /etc/bird.conf
 
-sed -i -e "s/#=+2#/route 10.$ipv4_2.0.0\/16 via \"freifunk-$community_short\";\n\
+sudo sed -i -e "s/#=+2#/route 10.$ipv4_2.0.0\/16 via \"freifunk-$community_short\";\n\
         #=+2#/" /etc/bird.conf
 
 echo "bird-config done."  
 
-systemctl restart bird
+sudo systemctl restart bird
 
 echo "bird restarted."
 
@@ -452,15 +439,15 @@ sed -i -e "s/#=+2#/route fddf:ebfd:a801:$dialing_code::\/64 via \"freifunk-$comm
   
 echo "bird6-config done."  
   
-systemctl restart bird6
+sudo systemctl restart bird6
 
 echo "bird6 restarted."
 
-systemctl restart ntpd
+sudo systemctl restart ntpd
 
 echo "ntpd restarted."
 
-sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
+sudo sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
 #=+#/" /usr/local/bin/tun-01_check.sh
 
 echo "tun-check-script updated... in 60 seconds online at most."
