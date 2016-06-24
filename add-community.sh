@@ -318,34 +318,12 @@ sudo systemctl start fastd@${community}HMTU
 
 echo "fastd started."
 
-#generate blockranges
-blockranges=""
-if [ $gateway_ip4 -eq 1 ]; then
-  blockranges="  pool {\n\
-    range 10.$ipv4_2.11.1 10.$ipv4_2.254.255;\n\
-    deny all clients;\n\
-  }"
-else
-  blockonestart=$(expr $gateway_ip4 - 10)
-  blockoneend=$(expr $gateway_ip4 - 1)
-  blocktwostart=$(expr $gateway_ip4 + 19)
-  blockranges="pool {\n\
-    range 10.$ipv4_2.$blockonestart.1 10.$ipv4_2.$blockoneend.255;\n\
-    deny all clients;\n\
-  }\n\
-  pool {\n\
-    range 10.$ipv4_2.$blocktwostart.1 10.$ipv4_2.254.255;\n\
-    deny all clients;\n\
-  }"
-fi
-
 
 sed -i -e "s/#=+#/\n\
 # $community.freifunk.net subnet and dhcp range for server\n\
 \n\
 subnet 10.$ipv4_2.0.0 netmask 255.255.0.0 {\n\
   range 10.$ipv4_2.$gateway_ip4.1 10.$ipv4_2.$(expr $gateway_ip4 + 9).255; #main\n\
-  $blockranges\n\
   option broadcast-address 10.$ipv4_2.255.255;\n\
   option routers 10.$ipv4_2.$gateway_ip4.0;\n\
   option domain-name-servers 10.$ipv4_2.$gateway_ip4.0;\n\
