@@ -90,9 +90,10 @@ sudo chmod +x /usr/local/bin/tun-01_check.sh
 #enabling services
 sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 
-#starting services
+#set routerid
+sudo sed -i -e "s/ROUTERID/$(/sbin/ifconfig eth0 | grep 'inet ' | cut -d: -f2 | awk '{ print $2}')/g" /etc/bird.conf
 
-#FIXME ask for ROUTERID for bird
+#starting services
 sudo systemctl start bird radvd named iptables #bird6
 
 echo "please start openvpn@tun-01 when config is completed."
