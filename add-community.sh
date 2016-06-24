@@ -176,7 +176,9 @@ on down \"
     sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
     sudo /usr/bin/ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
     sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
-\";" | sudo tee fastd.conf
+\";
+
+on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf
 
 
 echo "secret \"$privkey\";" | sudo tee secret.conf
@@ -258,7 +260,9 @@ on down \"
     sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
     sudo /usr/bin/ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
     sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
-\";" | sudo tee fastd.conf
+\";
+
+on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf
 
 
 echo "secret \"$privkey\";" | sudo tee secret.conf
