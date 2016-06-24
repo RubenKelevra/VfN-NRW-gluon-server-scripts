@@ -74,6 +74,36 @@ if [ -z "$fastd_port" ]; then
   exit 1
 fi
 
+if [ -z "$subnetmask" ]; then
+  echo "community-profile is missing a subnetmask definition"
+  exit 1
+fi
+
+if [ "$subnetmask" -ne 16 ] && [ "$subnetmask" -ne 17 ]; then
+  echo "community-profile's subnetmask definition is unsupported"
+  exit 1
+fi
+
+if [ -z "$community_short" ]; then
+  echo "community-profile is missing a community shortname definition"
+  exit 1
+fi
+
+if [ "${#community_short}" -gt 4 ]; then
+  echo "community-profile's definition of community shortname is to long"
+  exit 1
+fi
+
+if [ -z "$dialing_code" ]; then
+  echo "community-profile is missing a dialing code definition"
+  exit 1
+fi
+
+if [ -z "$ipv4_23" ]; then
+  echo "community-profile is missing a ipv4 subnet definition"
+  exit 1
+fi
+
 echo "setting up '$community' ..."
 
 echo "please make sure that the community '$community' has been added to mysql-database!"
@@ -164,13 +194,17 @@ echo "generating netctl-profile for bridge-interface"
 old_dir="$(pwd)"
 cd /etc/netctl
 
-touch freifunk-$community_short
+ipv4_1=$(echo $ipv4_23 | cut -d '.' -f 1)
+ipv4_2=$(echo $ipv4_23 | cut -d '.' -f 2)
+ipv4_2=$(($ipv4_2+$gateway_ip4))
+
+sudo touch freifunk-$community_short
 echo "Description='Freifunk-Bridge for $community'
 Interface=freifunk-$community_short
 Connection=bridge
 BindsToInterfaces=()
 IP=static
-Address=('10.$ipv4_2.$gateway_ip4.0/16')
+Address=('10.$ipv4_1.$ipv4_2.0/$')
 
 ## For IPv6 static address configuration
 IP6=static
@@ -178,20 +212,20 @@ Address6=('2001:bf7:100:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$diali
 SkipForwardingDelay=yes
 
 ExecUpPost=\"ip link set freifunk-$community_short txqueuelen 1000 && tc qdisc replace dev freifunk-$community_short root fq limit 1000 flow_limit 25 buckets 256 quantum 394 initial_quantum 15140 ; echo 0 > /proc/sys/net/ipv6/conf/freifunk-$community_short/accept_dad\"
-" >> freifunk-$community_short
+" | sudo tee freifunk-$community_short
 
 cd $old_dir
 
 echo "netctl-config done."
 
 
-netctl start freifunk-$community_short
-netctl enable freifunk-$community_short
+sudo netctl start freifunk-$community_short
+sudo netctl enable freifunk-$community_short
 
 echo "bridge started."
 
-systemctl enable fastd@$community
-systemctl start fastd@$community
+sudo systemctl enable fastd@$community
+sudo systemctl start fastd@$community
 
 echo "fastd started."
 
