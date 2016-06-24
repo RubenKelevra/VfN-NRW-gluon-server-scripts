@@ -53,8 +53,8 @@ fi
 source "$fn"
 unset fn
 
-fastd_port=15000
-fastd_port_HMTU=30000
+basic_fastd_port=15000
+basic_fastd_port_HMTU=30000
 pubkey=""
 privkey=""
 tmp=""
@@ -63,7 +63,7 @@ echo "setting up '$community' ..."
 
 echo "please make sure that the community '$community' has been added to mysql-database!"
 
-fastd_port=$(expr $fastd_port + $ret)
+fastd_port=$(($basic_fastd_port+$fastd_port))
 
 mkdir -p /etc/fastd/$community/nodes
 
