@@ -51,7 +51,7 @@ if [ ! -f "$fn" ]; then
   exit 1
 fi
 source "$fn"
-
+unset fn
 
 fastd_port=15000
 pubkey=""
