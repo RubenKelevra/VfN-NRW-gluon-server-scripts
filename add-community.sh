@@ -54,6 +54,7 @@ source "$fn"
 unset fn
 
 fastd_port=15000
+fastd_port_HMTU=30000
 pubkey=""
 privkey=""
 tmp=""
