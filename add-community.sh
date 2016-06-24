@@ -77,13 +77,27 @@ fastd_port=$(($basic_fastd_port+$fastd_port))
 
 sudo mkdir -p /etc/fastd/$community/nodes
 
+pregen_pubkey="pregenerated_keys/$HOSTNAME-$community.pub"
+pregen_privkey="pregenerated_keys/private_keys/$HOSTNAME-$community.priv"
+
+if [ -f "$pregen_pubkey" ]; then
+  echo "found pregenerated pubkey for community $community..."
+  if [ ! -f "$pregen_privkey" ]; then
+    echo "could not locate pregenerated privkey..."
+    exit 1
+  fi
+  pubkey="$(cat $pregen_pubkey)"
+  privkey="$(cat $pregen_privkey)"
+else
+  tmp=$(fastd --generate-key)
+
+  pubkey=$(echo $tmp | awk '{print $4}')
+  privkey=$(echo $tmp | awk '{print $2}')
+  unset tmp
+fi
+
+old_dir="$(pwd)"
 cd /etc/fastd/$community
-
-tmp=$(fastd --generate-key)
-
-pubkey=$(echo $tmp | awk '{print $4}')
-privkey=$(echo $tmp | awk '{print $2}')
-unset tmp
 
 echo "key \"$pubkey\"; #public key" > nodes/$servername.server
 [ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port;" >> nodes/$servername.server
