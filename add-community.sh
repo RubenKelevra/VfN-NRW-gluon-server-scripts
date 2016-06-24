@@ -111,13 +111,10 @@ interface \"ff$community_short-mesh-vpn\";
 log to syslog level error;
 user \"fastd\";
 packet mark 0x42;
-cipher \"salsa2012\"  use \"xmm\";
-cipher \"aes128-ctr\" use \"openssl\";
-mac \"ghash\"         use \"pclmulqdq\";
-method \"aes128-ctr+umac\";
-method \"aes128-gcm\";
 method \"salsa2012+umac\";
 method \"salsa2012+gmac\";
+method \"aes128-ctr+umac\";
+method \"aes128-gcm\";
 include \"secret.conf\";
 # public $pubkey
 mtu 1312;
@@ -154,9 +151,12 @@ sudo chmod go-rwx /etc/fastd/$community/secret.conf
 
 sudo chown fastd: -R /etc/fastd/$community
 
+cd $old_dir
+
 echo "fastd-config done."
 
 echo "generating netctl-profile for bridge-interface"
+old_dir="$(pwd)"
 cd /etc/netctl
 
 touch freifunk-$community_short
@@ -174,6 +174,8 @@ SkipForwardingDelay=yes
 
 ExecUpPost=\"ip link set freifunk-$community_short txqueuelen 1000 && tc qdisc replace dev freifunk-$community_short root fq limit 1000 flow_limit 25 buckets 256 quantum 394 initial_quantum 15140 ; echo 0 > /proc/sys/net/ipv6/conf/freifunk-$community_short/accept_dad\"
 " >> freifunk-$community_short
+
+cd $old_dir
 
 echo "netctl-config done."
 
