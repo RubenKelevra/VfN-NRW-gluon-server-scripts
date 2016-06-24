@@ -33,7 +33,7 @@ if [ -z "$1" ]; then
 fi
 community="$1"
 
-fn="serverprofiles/$community"
+fn="communityprofiles/$community"
 
 if [ ! -f "$fn" ]; then
   echo "community profile could not be found."
