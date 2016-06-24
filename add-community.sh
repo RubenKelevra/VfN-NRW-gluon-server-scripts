@@ -108,7 +108,7 @@ echo "setting up '$community' ..."
 
 echo "please make sure that the community '$community' has been added to mysql-database!"
 
-fastd_port=$(($basic_fastd_port+$fastd_port))
+fastd_port_config=$(($basic_fastd_port+$fastd_port))
 
 sudo mkdir -p /etc/fastd/$community/nodes
 
@@ -135,12 +135,12 @@ old_dir="$(pwd)"
 cd /etc/fastd/$community
 
 echo "key \"$pubkey\"; #public key" > nodes/$servername.server
-[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port;" >> nodes/$servername.server
-[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port;" >> nodes/$servername.server
+[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port_config;" >> nodes/$servername.server
+[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> nodes/$servername.server
 
 touch fastd.conf
-[ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port;" >> fastd.conf
-[ ! -z "$server_pubip6" ] && echo "bind [$server_pubip6]:$fastd_port;" >> fastd.conf
+[ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port_config;" >> fastd.conf
+[ ! -z "$server_pubip6" ] && echo "bind [$server_pubip6]:$fastd_port_config;" >> fastd.conf
 echo "mode tap;
 interface \"ff$community_short-mesh-vpn\";
 log to syslog level error;
@@ -189,6 +189,88 @@ sudo chown fastd: -R /etc/fastd/$community
 cd $old_dir
 
 echo "fastd-config done."
+
+fastd_port_config=$(($basic_fastd_port_HMTU+$fastd_port))
+
+sudo mkdir -p /etc/fastd/${community}HMTU/nodes
+
+pregen_pubkey="pregenerated_keys/$HOSTNAME-$community-HMTU.pub"
+pregen_privkey="pregenerated_keys/private_keys/$HOSTNAME-$community-HMTU.priv"
+
+if [ -f "$pregen_pubkey" ]; then
+  echo "found pregenerated pubkey for community ${community}-HMTU..."
+  if [ ! -f "$pregen_privkey" ]; then
+    echo "could not locate pregenerated privkey..."
+    exit 1
+  fi
+  pubkey="$(cat $pregen_pubkey)"
+  privkey="$(cat $pregen_privkey)"
+else
+  tmp=$(fastd --generate-key)
+
+  pubkey=$(echo $tmp | awk '{print $4}')
+  privkey=$(echo $tmp | awk '{print $2}')
+  unset tmp
+fi
+
+old_dir="$(pwd)"
+cd /etc/fastd/${community}HMTU
+
+echo "key \"$pubkey\"; #public key" > nodes/$servername.server
+[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port_config;" >> nodes/$servername.server
+[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> nodes/$servername.server
+
+touch fastd.conf
+[ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port_config;" >> fastd.conf
+[ ! -z "$server_pubip6" ] && echo "bind [$server_pubip6]:$fastd_port_config;" >> fastd.conf
+echo "mode tap;
+interface \"ff$community_short-meshvpnH\";
+log to syslog level error;
+user \"fastd\";
+packet mark 0x42;
+method \"salsa2012+umac\";
+method \"salsa2012+gmac\";
+method \"aes128-ctr+umac\";
+method \"aes128-gcm\";
+include \"secret.conf\";
+# public $pubkey
+mtu 3064;
+secure handshakes yes;
+
+include peers from \"nodes\";
+
+on up \"
+    ip link set up dev \$INTERFACE
+    batctl -m mesh-$community_short if add \$INTERFACE
+    ip link set up dev mesh-$community_short
+    batctl -m mesh-$community_short it 5000
+    batctl -m mesh-$community_short nc 0
+    batctl -m mesh-$community_short mm 1
+    batctl -m mesh-$community_short dat 1
+    echo '120' > /sys/class/net/mesh-$community_short/mesh/hop_penalty
+    ip rule add iif freifunk-$community_short lookup 42 prio 4200
+    ip -6 rule add iif freifunk-$community_short lookup 42 prio 4200
+    brctl addif freifunk-$community_short mesh-$community_short
+\";
+
+on down \"
+    sudo /usr/bin/brctl delif freifunk-$community_short mesh-$community_short
+    sudo /usr/bin/batctl -m mesh-$community_short if del \$INTERFACE
+    sudo /usr/bin/ip rule del from all iif freifunk-$community_short lookup 42 prio 4200
+    sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
+\";" | sudo tee fastd.conf
+
+
+echo "secret \"$privkey\";" | sudo tee secret.conf
+unset privkey
+
+sudo chmod go-rwx /etc/fastd/${community}HMTU/secret.conf
+
+sudo chown fastd: -R /etc/fastd/${community}HMTU
+
+cd $old_dir
+
+echo "High MTU fastd-config done."
 
 echo "generating netctl-profile for bridge-interface"
 old_dir="$(pwd)"
