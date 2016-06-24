@@ -27,6 +27,11 @@
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ip
 
+if [ "$(whoami)" == 'root' ]; then
+	echo 'Do not run as root. Use an account with sudo-rights.'
+	exit 1
+fi
+
 if [ ! -f '/etc/sudoers.installed_by_gluon-server-scripts' ]; then
   echo "init-server script seems to have never been run here..."
   exit 1
