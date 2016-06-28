@@ -3,6 +3,10 @@
 :INPUT ACCEPT [11844:1916189]
 :FORWARD ACCEPT [0:0]
 -A FORWARD -o tun-vpn-01 -p tcp --dport 25  -j REJECT --reject-with icmp-admin-prohibited
+-A FORWARD -o tun-vpn-01 -p tcp --dport 23 -j REJECT --reject-with icmp-admin-prohibited
+-A FORWARD -o tun-vpn-01 --dst 192.168.0.0/16 -j REJECT --reject-with icmp-admin-prohibited
+-A FORWARD -o tun-vpn-01 -p udp --dport 16471 -j LOG --log-prefix "FORWARD:LOG:might be a botnet!" --log-level 6
+-A FORWARD -m state --state INVALID -m comment --comment "DROP INVALID" -j DROP
 :OUTPUT ACCEPT [6263:1020836]
 COMMIT
 *mangle
