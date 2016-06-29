@@ -192,10 +192,10 @@ on down \"
     sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
 \";
 
-on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf
+on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf > /dev/null
 
 
-echo "secret \"$privkey\";" | sudo tee secret.conf
+echo "secret \"$privkey\";" | sudo tee secret.conf > /dev/null
 unset privkey
 
 sudo chmod go-rwx /etc/fastd/$community/secret.conf
@@ -276,10 +276,10 @@ on down \"
     sudo /usr/bin/ip -6 rule del from all iif freifunk-$community_short lookup 42 prio 4200
 \";
 
-on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf
+on verify \"/usr/local/bin/fastd-verify\";" | sudo tee fastd.conf > /dev/null
 
 
-echo "secret \"$privkey\";" | sudo tee secret.conf
+echo "secret \"$privkey\";" | sudo tee secret.conf > /dev/null
 unset privkey
 
 sudo chmod go-rwx /etc/fastd/${community}HMTU/secret.conf
@@ -308,7 +308,7 @@ Address6=('2001:bf7:100:$dialing_code::c$servernumber/64' 'fddf:ebfd:a801:$diali
 SkipForwardingDelay=yes
 
 ExecUpPost=\"ip link set freifunk-$community_short txqueuelen 1000 && tc qdisc replace dev freifunk-$community_short root fq limit 1000 flow_limit 25 buckets 256 quantum 394 initial_quantum 15140 ; echo 0 > /proc/sys/net/ipv6/conf/freifunk-$community_short/accept_dad\"
-" | sudo tee freifunk-$community_short
+" | sudo tee freifunk-$community_short > /dev/null
 
 cd $old_dir
 
@@ -356,7 +356,7 @@ subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
   interface freifunk-$community_short;\n\
 }\n\
 \n\
-#=+#/" | sudo tee "$dhcpd_config"
+#=+#/" | sudo tee "$dhcpd_config" > /dev/null
 
 sudo chmod 644 "$dhcpd_config"
 
