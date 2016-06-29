@@ -412,6 +412,17 @@ echo "radvd-config done."
 sudo systemctl restart radvd
 echo "radvd restarted."
 
+sudo systemctl restart ntpd
+
+echo "ntpd restarted."
+
+sudo sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
+#=+#/" /usr/local/bin/tun-01_check.sh
+
+echo "tun-check-script updated... in 60 seconds online at most."
+
+exit 0
+
 #configure bird
 sudo sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
         #=+1#/" /etc/bird.conf
@@ -439,15 +450,6 @@ echo "bird6-config done."
 sudo systemctl restart bird6
 
 echo "bird6 restarted."
-
-sudo systemctl restart ntpd
-
-echo "ntpd restarted."
-
-sudo sed -i -e "s/#=+#/meshdevs+=('mesh-$community_short')\n\
-#=+#/" /usr/local/bin/tun-01_check.sh
-
-echo "tun-check-script updated... in 60 seconds online at most."
 
 echo ""
 echo ""
