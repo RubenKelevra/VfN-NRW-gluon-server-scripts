@@ -369,15 +369,12 @@ sudo systemctl restart dhcpd4
 echo "dhcpd restarted."
 
 sudo sed -i -e "s/\/\/#6+#/fddf:ebfd:a801:$dialing_code::c$servernumber;\n\
-                fddf:ebfd:a801:$dialing_code::ac1;\n\
-                \/\/#6+#/" /etc/named.conf
-
-sudo sed -i -e "s/\/\/#6+#/2001:bf7:100:$dialing_code::c$servernumber;\n\
-                \/\/#6+#/" /etc/named.conf
-fi
+        fddf:ebfd:a801:$dialing_code::ac1;\n\
+        2001:bf7:100:$dialing_code::c$servernumber;\n\
+        \/\/#6+#/" /etc/named.conf
 
 sudo sed -i -e "s/\/\/#4+#/10.$ipv4_2.$gateway_ip4.0;\n\
-                        \/\/#4+#/" /etc/named.conf
+        \/\/#4+#/" /etc/named.conf
 
 echo "named-config done."
 
