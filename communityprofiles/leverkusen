@@ -4,7 +4,7 @@
 community_short='lev'
 
 #First 3-4 numbers of the dialing code of the townhall, without leading zero!
-dialing_code=''
+dialing_code='2144'
 
 #The second group of private IP4 (10.xx.yy.0/1x)
 ipv4_23='76.0'
