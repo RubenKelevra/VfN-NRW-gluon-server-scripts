@@ -94,7 +94,7 @@ sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 sudo sed -i -e "s/ROUTERID/$server_pubip4/g" /etc/bird.conf
 
 #set SNAT-IP
-sudo sed -i -e "s/ROUTERID/$server_pubip4/g" /etc/iptables/iptables.rules
+sudo sed -i -e "s/ROUTERIP/$server_pubip4/g" /etc/iptables/iptables.rules
 
 #starting services
 sudo systemctl start radvd named iptables #bird  bird6
