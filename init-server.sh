@@ -97,7 +97,7 @@ sudo sed -i -e "s/ROUTERID/$server_pubip4/g" /etc/bird.conf
 sudo sed -i -e "s/ROUTERID/$server_pubip4/g" /etc/iptables/iptables.rules
 
 #starting services
-sudo systemctl start bird radvd named iptables #bird6
+sudo systemctl start radvd named iptables #bird  bird6
 
 echo "please start openvpn@tun-01 when config is completed."
 
