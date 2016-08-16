@@ -25,6 +25,17 @@ if [ "$(whoami)" == 'root' ]; then
 	exit 1
 fi
 
+HOSTNAME="$(hostname --short)"
+
+fn="serverprofiles/$HOSTNAME"
+
+if [ ! -f "$fn" ]; then
+  echo "server profile could not be found."
+  exit 1
+fi
+source "$fn"
+unset fn
+
 #settings
 install_folder='basic-config'
 packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv'
