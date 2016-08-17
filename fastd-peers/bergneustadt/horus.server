@@ -1,0 +1,3 @@
+key "95dfd4cc5d04ce307c83470cdd94179070b24e1ba1ba791cc59eeb4320d5fb83"; #public key
+remote [2001:41d0:2:b0db:1::1]:30250;
+#remote 5.135.22.66:30250;
