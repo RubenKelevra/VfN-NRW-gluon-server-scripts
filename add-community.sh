@@ -362,6 +362,10 @@ subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
 }\n\
 \n" | sudo tee "$dhcpd_config" > /dev/null
 
+
+echo "include /etc/dhcp.d-freifunk/$dhcpd_config.conf;" | sudo tee -a /etc/dhcpd.conf > /dev/null
+
+
 sudo chmod 644 "$dhcpd_config"
 
 unset dhcpd_config
