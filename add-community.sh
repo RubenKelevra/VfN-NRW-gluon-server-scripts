@@ -331,9 +331,14 @@ echo "fastd started."
 if [ $subnetmask -eq 16 ]; then
   subnetmask_binary="255.255.0.0"
   broadcast_addr="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 255).255)"
+  dhcp_range_start="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 2).0)"
+  dhcp_range_end="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 255).254)"
+
 elif [ $subnetmask -eq 17 ]; then
   subnetmask_binary="255.255.128.0"
   broadcast_addr="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 127).255)"
+  dhcp_range_start="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 2).0)"
+  dhcp_range_end="$(echo 10.$ipv4_2.$(expr $ipv4_3_netmask + 127).254)"
 else
   echo "unexpected error 1831"
   exit 1
@@ -347,7 +352,7 @@ sed -i -e "s/#=+#/\n\
 # $community.freifunk.net subnet and dhcp range for server\n\
 \n\
 subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
-  range 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).1 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4 + 9).255; #main\n\
+  range $dhcp_range_start $dhcp_range_end; #main\n\
   option broadcast-address $broadcast_addr;\n\
   option routers 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
   option domain-name-servers 10.$ipv4_2.$(expr $ipv4_3 + $gateway_ip4).0;\n\
