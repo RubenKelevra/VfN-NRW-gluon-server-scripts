@@ -98,6 +98,9 @@ sudo touch /etc/sysctl.d/50-default.conf
 sudo chmod +x /etc/openvpn/tun-01_up.sh
 sudo chmod +x /usr/local/bin/tun-01_check.sh
 
+sudo touch /var/log/named.log
+sudo chown named: /var/log/named.log
+
 #enabling services
 sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 
