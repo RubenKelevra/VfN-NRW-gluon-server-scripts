@@ -315,7 +315,7 @@ cd $old_dir
 echo "netctl-config done."
 
 sudo netctl start freifunk-$community_short
-sudo netctl enable freifunk-$community_short
+sudo netctl reenable freifunk-$community_short 2>/dev/null
 
 echo "bridge started."
 
