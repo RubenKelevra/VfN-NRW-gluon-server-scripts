@@ -24,6 +24,12 @@ communitys="$(ls -1 communityprofiles)"
 mkdir privkeys -p
 
 for community in $communitys; do
+	[ -z "$community" ] && continue
+	
+	if [ -f "fastd-peers/$community/$HOSTNAME.server" ]; then
+	  echo "warning: server profile for community $community already exists, skipping"
+	  continue
+	fi
 	
 	## Generate HTMU-Key
 	tmp=$(fastd --generate-key)
@@ -32,26 +38,10 @@ for community in $communitys; do
 	privkey=$(echo $tmp | awk '{print $2}')
 	unset tmp
 	
-	if [ -f "fastd-peers/$community/$server.server" ]; then
-	  echo "warning: server profile for community $community already exists, skipping"
-	  continue
-	fi
-	echo "key \"$pubkey\"; #public key" > "fastd-peers/$community/$server.server"
-  [ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> "fastd-peers/$community/$server.server"
+	echo "key \"$pubkey\"; #public key" > "fastd-peers/$community/$HOSTNAME.server"
+	[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> "fastd-peers/$community/$HOSTNAME.server"
 	
-	echo "$privkey" > "privkeys/$server-$community-HMTU.priv"
-	
-	unset pubkey privkey
-
-	## Generate Normal Key
-	tmp=$(fastd --generate-key)
-
-	pubkey=$(echo $tmp | awk '{print $4}')
-	privkey=$(echo $tmp | awk '{print $2}')
-	unset tmp
-	
-	echo "$pubkey" > "$server-$community.pub"
-	echo "$privkey" > "$server-$community.priv"
+	echo "$privkey" > "privkeys/$HOSTNAME-$community-HMTU.priv"
 	
 	unset pubkey privkey
 done
