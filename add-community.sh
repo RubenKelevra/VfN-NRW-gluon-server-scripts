@@ -27,8 +27,8 @@
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ifconfig
  # fastd ALL=(ALL)NOPASSWD:/usr/bin/ip
 
-if [ "$(whoami)" == 'root' ]; then
-	echo 'Do not run as root. Use an account with sudo-rights.'
+if [ "$(whoami)" != 'root' ]; then
+	echo 'Do run as root.'
 	exit 1
 fi
 
