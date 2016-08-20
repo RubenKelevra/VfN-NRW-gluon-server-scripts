@@ -314,7 +314,6 @@ cd $old_dir
 
 echo "netctl-config done."
 
-
 sudo netctl start freifunk-$community_short
 sudo netctl enable freifunk-$community_short
 
@@ -362,8 +361,10 @@ subnet 10.$ipv4_2.$ipv4_3_netmask.0 netmask $subnetmask_binary {\n\
 }\n\
 \n" | sudo tee "$dhcpd_config" > /dev/null
 
-
-echo "include $dhcpd_config;" | sudo tee -a /etc/dhcpd.conf > /dev/null
+cat /etc/dhcpd.conf | grep -v "$dhcpd_config" > /etc/dhcpd.conf.tmp
+cat /etc/dhcpd.conf.tmp > /etc/dhcpd.conf
+rm /etc/dhcpd.conf.tmp
+echo "include \"$dhcpd_config\";" | sudo tee -a /etc/dhcpd.conf > /dev/null
 
 
 sudo chmod 644 "$dhcpd_config"
