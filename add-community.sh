@@ -348,7 +348,7 @@ sudo mkdir -p /etc/dhcp.d-freifunk/
 
 dhcpd_config="/etc/dhcp.d-freifunk/$community.conf"
 
-echo "\n\
+printf "\n\
 # $community.freifunk.net subnet and dhcp range for server\n\
 \n\
 subnet 10.$ipv4_2.$ipv4_3.0 netmask $subnetmask_binary {\n\
