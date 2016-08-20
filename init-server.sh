@@ -101,6 +101,10 @@ sudo chmod +x /usr/local/bin/tun-01_check.sh
 sudo touch /var/log/named.log
 sudo chown named: /var/log/named.log
 
+sudo mkdir /var/log/named/
+sudo touch /var/log/named/query.log
+sudo chown named: -R /var/log/named/
+
 #enabling services
 sudo systemctl enable bird radvd named iptables openvpn@tun-01 # bird6
 
