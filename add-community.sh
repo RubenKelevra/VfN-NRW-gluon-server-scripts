@@ -392,28 +392,28 @@ echo "named restarted."
 
 sudo sed -i -e "s/#=+#/\n\
   interface freifunk-$community_short #$community\n\
-  {\n\
+  \{\n\
       AdvSendAdvert on;\n\
       IgnoreIfMissing on;\n\
       MaxRtrAdvInterval 200;\n\
       AdvLinkMTU $radvd_AdvLinkMTU;\n\
   \n\
       prefix 2001:bf7:100:$dialing_code::\/64\n\
-      {\n\
-      };\n\
+      \{\n\
+      \};\n\
   \n\
       RDNSS 2001:bf7:100:$dialing_code::ac1\n\
-      {\n\
-      };\n\
-      
+      \{\n\
+      \};\n\
+  \n\
       prefix fddf:ebfd:a801:$dialing_code::\/64\n\
-      {\n\
-      };\n\
+      \{\n\
+      \};\n\
   \n\
       RDNSS fddf:ebfd:a801:$dialing_code::ac1\n\
-      {\n\
-      };\n\
-  };\n\
+      \{\n\
+      \};\n\
+  \};\n\
   #=+#/" /etc/radvd.conf
 
 echo "radvd-config done."
