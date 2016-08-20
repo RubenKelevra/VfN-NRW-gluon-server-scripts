@@ -355,7 +355,7 @@ subnet 10.$ipv4_2.$ipv4_3_netmask.0 netmask $subnetmask_binary {\n\
   range $dhcp_range_start $dhcp_range_end; #main\n\
   option broadcast-address $broadcast_addr;\n\
   option routers 10.$ipv4_2.$ipv4_3.0;\n\
-  option domain-name-servers 10.$ipv4_3.0;\n\
+  option domain-name-servers 10.$ipv4_2.$ipv4_3.0;\n\
   option ntp-servers 10.$ipv4_2.$ipv4_3.0;\n\
   server-identifier 10.$ipv4_2.$ipv4_3.0;\n\
   interface freifunk-$community_short;\n\
