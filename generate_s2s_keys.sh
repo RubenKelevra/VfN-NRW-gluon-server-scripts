@@ -38,6 +38,7 @@ for community in $communitys; do
 	privkey=$(echo $tmp | awk '{print $2}')
 	unset tmp
 	
+	mkdir -p "fastd-peers/$community"
 	echo "key \"$pubkey\"; #public key" > "fastd-peers/$community/$HOSTNAME.server"
 	[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> "fastd-peers/$community/$HOSTNAME.server"
 	
