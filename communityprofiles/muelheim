@@ -11,4 +11,4 @@ ipv4_23='47.0'
 
 subnetmask='17'
 
-fastd_port='047'
+fastd_port='47'
