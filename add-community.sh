@@ -148,10 +148,6 @@ fi
 old_dir="$(pwd)"
 cd /etc/fastd/$community
 
-echo "key \"$pubkey\"; #public key" > nodes/$servername.server
-[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port_config;" >> nodes/$servername.server
-[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> nodes/$servername.server
-
 touch fastd.conf
 [ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port_config;" >> fastd.conf
 [ ! -z "$server_pubip6" ] && echo "bind [$server_pubip6]:$fastd_port_config;" >> fastd.conf
@@ -231,10 +227,6 @@ fi
 
 old_dir="$(pwd)"
 cd /etc/fastd/${community}HMTU
-
-echo "key \"$pubkey\"; #public key" > nodes/$servername.server
-[ ! -z "$server_pubip4" ] && echo "remote $server_pubip4:$fastd_port_config;" >> nodes/$servername.server
-[ ! -z "$server_pubip6" ] && echo "remote [$server_pubip6]:$fastd_port_config;" >> nodes/$servername.server
 
 touch fastd.conf
 [ ! -z "$server_pubip4" ] && echo "bind $server_pubip4:$fastd_port_config;" >> fastd.conf
