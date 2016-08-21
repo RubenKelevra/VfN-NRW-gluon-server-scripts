@@ -11,4 +11,4 @@ ipv4_23='171.0'
 
 subnetmask='16'
 
-fastd_port='000'
+fastd_port='0'
