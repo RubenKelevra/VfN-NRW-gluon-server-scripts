@@ -31,6 +31,17 @@ for community in $communitys; do
 	  continue
 	fi
 	
+	fn="communityprofiles/$community"
+
+	if [ ! -f "$fn" ]; then
+		echo "community profile could not be found."
+		exit 1
+	fi
+	source "$fn"
+	unset fn
+	
+	fastd_port_config=$((31000+$fastd_port))
+	
 	## Generate HTMU-Key
 	tmp=$(fastd --generate-key)
 
