@@ -9,6 +9,6 @@ dialing_code='2196'
 #The second group of private IP4 (10.xx.yy.0/1x)
 ipv4_23='52.0'
 
-subnetmask=16
+subnetmask='16'
 
 fastd_port='052'
