@@ -1,3 +1,2 @@
-key "0f7eda5a753823e98bb990d60a2bd8030c57f8d08679345bc2aeeef5a83fc61b"; #public key
-remote [2001:4ba0:92f3:300::2]:30006;
-#remote 62.141.34.115:30006;
+key "cdb2e129fc8653845d0270feda793cdf2d8e70c58490cc3ba06ae61e6fb2d3d1"; #public key
+remote [2001:4ba0:92f3:300::2]:31006;
