@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 ##preconditions:
 #server init script has been run
@@ -8,7 +8,7 @@
 #yaourt -S fastd batctl batman-adv
 #useradd --system --no-create-home --shell /bin/false fastd
 #useradd --system --no-create-home --shell /bin/false openvpn
-#create openvpn@tun-01 config 
+#create openvpn@tun-01 config
 #chmod +x /etc/openvpn/tun-01_up.sh
 #config-files from folder basic-config
 #systemctl enable named iptables openvpn@tun-01
@@ -169,6 +169,7 @@ include peers from \"nodes\";
 
 on up \"
     ip link set up dev \$INTERFACE
+	modprobe batman-adv
     batctl -m mesh-$community_short if add \$INTERFACE
     ip link set up dev mesh-$community_short
     batctl -m mesh-$community_short it 5000
@@ -249,6 +250,7 @@ include peers from \"nodes\";
 
 on up \"
     ip link set up dev \$INTERFACE
+	modprobe batman-adv
     batctl -m mesh-$community_short if add \$INTERFACE
     ip link set up dev mesh-$community_short
     batctl -m mesh-$community_short it 5000
@@ -307,7 +309,7 @@ cd $old_dir
 echo "netctl-config done."
 
 sudo netctl start freifunk-$community_short
-sudo netctl reenable freifunk-$community_short >/dev/null 2>&1 
+sudo netctl reenable freifunk-$community_short >/dev/null 2>&1
 
 echo "bridge started."
 
@@ -431,7 +433,7 @@ sudo sed -i -e "s/#=+1#/if net ~ 10.$ipv4_2.0.0\/16 then reject;\n\
 sudo sed -i -e "s/#=+2#/route 10.$ipv4_2.0.0\/16 via \"freifunk-$community_short\";\n\
         #=+2#/" /etc/bird.conf
 
-echo "bird-config done."  
+echo "bird-config done."
 
 sudo systemctl restart bird
 
@@ -445,9 +447,9 @@ fi
 
 sed -i -e "s/#=+2#/route fddf:ebfd:a801:$dialing_code::\/64 via \"freifunk-$community_short\";\n\
         #=+2#/" /etc/bird6.conf
-  
-echo "bird6-config done."  
-  
+
+echo "bird6-config done."
+
 sudo systemctl restart bird6
 
 echo "bird6 restarted."
@@ -473,4 +475,3 @@ echo "},"
 echo "
 
 Goodbye!"
-
