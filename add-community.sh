@@ -158,8 +158,6 @@ user \"fastd\";
 packet mark 0x42;
 method \"salsa2012+umac\";
 method \"salsa2012+gmac\";
-method \"aes128-ctr+umac\";
-method \"aes128-gcm\";
 include \"secret.conf\";
 # public $pubkey
 mtu 1312;
@@ -239,8 +237,6 @@ user \"fastd\";
 packet mark 0x42;
 method \"salsa2012+umac\";
 method \"salsa2012+gmac\";
-method \"aes128-ctr+umac\";
-method \"aes128-gcm\";
 include \"secret.conf\";
 # public $pubkey
 mtu 3064;
