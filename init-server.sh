@@ -38,7 +38,7 @@ unset fn
 
 #settings
 install_folder='basic-config'
-packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv'
+packagelist='iproute2 base-devel net-tools bird bird6 dhcp radvd bind openvpn haveged bridge-utils tinc fastd batctl batman-adv python-requests'
 
 echo "updating system..."
 
