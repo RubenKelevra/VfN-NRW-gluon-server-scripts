@@ -1,3 +1,3 @@
 add-community
 =============
-This scripts aren't stable, don't use it.
+This scripts aren't stable, don't use them.
